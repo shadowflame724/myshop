@@ -17,7 +17,7 @@ class DefaultController extends Controller
             ->getManager()
             ->createQuery("select p.fileName from DefaultBundle:ProductPhoto p ")
             ->getResult();
-
+/*
         $count = $this->get("myshop.admin_unused_image_delete")->deleteImg($dbNameList);
         if ($count != null) {
             $this->addFlash(
@@ -25,7 +25,7 @@ class DefaultController extends Controller
                 'Deleted: ' . $count . ' unused photos!'
             );
         }
-
+*/
         return [];
     }
 

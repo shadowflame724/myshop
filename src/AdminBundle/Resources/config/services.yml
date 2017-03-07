@@ -34,3 +34,10 @@ services:
             - "@mailer"
             - "@templating"
 
+    myshop.admin_loader:
+            class: AdminBundle\LoadPrevData\LoadPrevData
+            arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@kernel"
+            - "@security.password_encoder"
+

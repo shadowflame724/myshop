@@ -2,6 +2,10 @@ login:
     path:     /login
     defaults: { _controller: AdminBundle:Login:login }
 
+myshop.admin_prevdataload:
+    path:     /prevdataload
+    defaults: { _controller: AdminBundle:LoadPrevData:loadData }
+
 myshop.admin_editor:
     path: /
     defaults: { _controller: AdminBundle:Default:editor }
