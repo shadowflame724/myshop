@@ -1,0 +1,121 @@
+<?php
+
+namespace DefaultBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * Category
+ *
+ * @ORM\Table(name="category")
+ * @ORM\Entity(repositoryClass="DefaultBundle\Repository\CategoryRepository")
+ */
+class Category
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    public function __toString()
+    {
+        return strval($this->getId());
+    }
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="DefaultBundle\Entity\Product", mappedBy="category")
+     */
+    private $productList;
+    
+    /**
+     * @var Category
+     *
+     * @ORM\ManyToOne(targetEntity="MyShop\DefaultBundle\Entity\Category", inversedBy="childrenCategories")
+     * @ORM\JoinColumn(name="id_parent", referencedColumnName="id")
+     */
+    private $parentCategory;
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="MyShop\DefaultBundle\Entity\Category", mappedBy="parentCategory")
+     */
+    private $childrenCategories;
+
+
+    public function __construct()
+    {
+        $this->productList = new ArrayCollection();
+    }
+
+    public function addProduct(Product $product)
+    {
+        $product->setCategory($this);
+        $this->productList[] = $product;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getProductList()
+    {
+        return $this->productList;
+    }
+
+    /**
+     * @param mixed Product
+     */
+    public function setProductList(Product $productList)
+    {
+        $this->productList = $productList;
+    }
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Category
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+}
+

@@ -1,0 +1,17 @@
+myshop.index:
+    path:     /{id}
+    defaults: { _controller: DefaultBundle:Default:index , id:null}
+    requirements:
+          id: \d+
+
+myshop.single:
+    path:     /single/{id}
+    defaults: { _controller: DefaultBundle:Default:single, id:product.id}
+    requirements:
+          id: \d+
+
+product_info_rest_json:
+    path:     api/product/{id}.json
+    defaults: { _controller: DefaultBundle:API\REST\Product:productInfo, id:null }
+    requirements:
+          id: \d+

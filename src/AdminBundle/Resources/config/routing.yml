@@ -1,0 +1,98 @@
+login:
+    path:     /login
+    defaults: { _controller: AdminBundle:Login:login }
+
+myshop.admin_editor:
+    path: /
+    defaults: { _controller: AdminBundle:Default:editor }
+
+myshop.admin_editor_category_list:
+    path: /category/list
+    defaults: { _controller: AdminBundle:Category:list }
+myshop.admin_editor_category_add:
+    path: /category/add/{id}
+    defaults: { _controller: AdminBundle:Category:add, id:null }
+    requirements:
+          id: \d+
+myshop.admin_editor_category_edit:
+    path: /category/edit/{id}
+    defaults: { _controller: AdminBundle:Category:edit }
+    requirements:
+          id: \d+
+myshop.admin_editor_category_delete:
+    path: /category/delete/{id}
+    defaults: { _controller: AdminBundle:Category:delete }
+    requirements:
+          id: \d+
+
+myshop.admin_editor_manufacturer_list:
+    path: /manufacturer/list
+    defaults: { _controller: AdminBundle:Manufacturer:list }
+myshop.admin_editor_manufacturer_add:
+    path: /manufacturer/add
+    defaults: { _controller: AdminBundle:Manufacturer:add }
+myshop.admin_editor_manufacturer_edit:
+    path: /manufacturer/edit/{id}
+    defaults: { _controller: AdminBundle:Manufacturer:edit }
+    requirements:
+          id: \d+
+myshop.admin_editor_manufacturer_delete:
+    path: /manufacturer/delete/{id}
+    defaults: { _controller: AdminBundle:Manufacturer:delete }
+    requirements:
+          id: \d+
+
+myshop.admin_editor_product_list:
+    path: /product/list
+    defaults: { _controller: AdminBundle:Product:list }
+myshop.admin_editor_product_add:
+    path: /product/add
+    defaults: { _controller: AdminBundle:Product:add }
+myshop.admin_editor_product_edit:
+    path: /product/edit/{id}
+    defaults: { _controller: AdminBundle:Product:edit }
+    requirements:
+          id: \d+
+myshop.admin_editor_product_delete:
+    path: /product/delete/{id}
+    defaults: { _controller: AdminBundle:Product:delete }
+    requirements:
+          id: \d+
+
+myshop.admin_editor_photo_list:
+    path: /product/{id}/photo/list
+    defaults: { _controller: AdminBundle:ProductPhoto:list }
+    requirements:
+          id: \d+
+myshop.admin_editor_photo_add:
+    path: /product/{id}/photo/add
+    defaults: { _controller: AdminBundle:ProductPhoto:add }
+    requirements:
+          id: \d+
+myshop.admin_editor_photo_edit:
+    path: /product/{id}/photo/edit
+    defaults: { _controller: AdminBundle:ProductPhoto:edit }
+    requirements:
+          id: \d+
+myshop.admin_editor_photo_delete:
+    path: /product/{id}/photo/delete
+    defaults: { _controller: AdminBundle:ProductPhoto:delete }
+    requirements:
+          id: \d+
+
+myshop.admin_editor_user_list:
+    path: /user/list
+    defaults: { _controller: AdminBundle:User:list }
+myshop.admin_editor_user_add:
+    path: /user/add/
+    defaults: { _controller: AdminBundle:User:add }
+myshop.admin_editor_user_edit:
+    path: /user/edit/{id}
+    defaults: { _controller: AdminBundle:User:edit }
+    requirements:
+          id: \d+
+myshop.admin_editor_user_delete:
+    path: /user/delete/{id}
+    defaults: { _controller: AdminBundle:User:delete }
+    requirements:
+          id: \d+

@@ -1,0 +1,30 @@
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: myshop
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+    upload_image_type_list:
+        - ["jpg", "image/jpg"]
+        - ["jpeg", "image/jpeg"]
+        - ["gif", "image/gif"]
+        - ["png", "image/png"]
+
+    upload_image_size_list:
+            -
+                - 250
+                - 250
+
+    image_upload_dir: "%kernel.root_dir%/../web/photos/"
+
+    # A secret key that's used to generate certain security-related tokens
+    secret:            ThisTokenIsNotSoSecretChangeIt

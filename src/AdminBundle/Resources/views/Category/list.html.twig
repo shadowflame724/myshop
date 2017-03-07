@@ -1,0 +1,63 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#jstree_demo_div').jstree({
+                'core': {
+                    'data': {{ categoryList|raw }}
+                },
+                "contextmenu": {
+                    "items": function (data) {
+                        var tree = $("#jstree_demo_div").jstree(true);
+                        return {
+                            "Create": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "label": "Create",
+                                "action": function (obj) {
+                                    data = tree.create_node(data);
+                                    tree.edit(data);
+                                    var id = obj.reference.prevObject.selector.slice(1);
+                                    window.location="http://127.0.0.1:8000/admin/category/add/" +id;
+                                }
+                            },
+                            "Rename": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "label": "Rename",
+                                "action": function (obj) {
+                                    tree.edit(data);
+                                    var id = obj.reference.prevObject.selector.slice(1);
+                                    window.location="http://127.0.0.1:8000/admin/category/edit/" +id;
+                                }
+                            },
+                            "Remove": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "label": "Remove",
+                                "action": function (obj) {
+                                    tree.delete_node(data);
+                                    var id = obj.reference.prevObject.selector.slice(1);
+                                    window.location="http://127.0.0.1:8000/admin/category/delete/" +id;
+                                }
+                            }
+                        };
+                    }
+                },
+                "plugins": ["contextmenu"]
+            });
+        });
+    </script>
+
+    <a href="{{ path("myshop.admin_editor_category_add") }}">Add Root Category</a>
+    <div id="jstree_demo_div">
+        <ul></ul>
+    </div>
+
+
+{% endblock %}

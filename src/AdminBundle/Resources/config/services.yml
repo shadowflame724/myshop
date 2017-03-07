@@ -1,0 +1,36 @@
+services:
+    myshop.admin_namegenerator_img:
+        class: AdminBundle\ImageUtil\ImageNameGenerator
+
+    myshop.admin_check_img:
+        class: AdminBundle\ImageUtil\CheckImg
+        arguments:
+            - "%upload_image_type_list%"
+
+    myshop.admin_image_upload:
+        class: AdminBundle\ImageUtil\UploadImageService
+        arguments:
+            - "@myshop.admin_check_img"
+            - "@myshop.admin_namegenerator_img"
+            - "%upload_image_size_list%"
+        calls:
+            - ["setUploadImageRootDir", ["%image_upload_dir%"]]
+
+    myshop.admin_image_delete:
+        class: AdminBundle\ImageUtil\ImageDelete
+        calls:
+            - ["setUploadImageRootDir", ["%image_upload_dir%"]]
+
+    myshop.admin_unused_image_delete:
+        class: AdminBundle\ImageUtil\DeleteUnusedImage
+        arguments:
+            - "@myshop.admin_image_delete"
+        calls:
+            - ["setUploadImageRootDir", ["%image_upload_dir%"]]
+
+    myshop.admin_email_notification:
+            class: AdminBundle\Notification\Notification
+            arguments:
+            - "@mailer"
+            - "@templating"
+

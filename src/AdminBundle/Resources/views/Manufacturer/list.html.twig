@@ -1,0 +1,22 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body%}
+<a href="{{ path("myshop.admin_editor_manufacturer_add") }}">Add Manufacturer</a>
+    <ul>
+        <table border="1">
+            <tr>
+                <td>Company:</td>
+                <td>Country:</td>
+            </tr>
+    {% for manufacturer in manufacturerList %}
+        <tr>
+        <td>{{ manufacturer.company }}</td>
+        <td>{{ manufacturer.country }}</a></td>
+        <td><a href="{{ path("myshop.admin_editor_manufacturer_edit", {id:manufacturer.id}) }}">Edit</a></td>
+        <td><a href="{{ path("myshop.admin_editor_manufacturer_delete", {id:manufacturer.id}) }}">Delete</a><br/></td>
+        </tr>
+    {% endfor %}
+        </table>
+    </ul>
+
+{% endblock %}

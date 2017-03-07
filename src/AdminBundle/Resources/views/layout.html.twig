@@ -1,0 +1,35 @@
+<html>
+<head>
+</head>
+<body>
+    <tr>
+        <td><h1>ADMIN PANEL</h1></td>
+        <b>Welcome, {{ app.user }} </b><br>
+        <a href="/logout"><input type="button" value="Logout"></a>
+    </tr>
+<table border="1" style="width: 100%">
+    <tr>
+        <td valign="top" style="width: 400px">
+            <b>What you want yo edit:</b><br>
+            <a href="{{ path("myshop.admin_editor_category_list") }}"> Category</a><br>
+            <a href="{{ path("myshop.admin_editor_manufacturer_list") }}"> Manufacturer</a><br>
+            <a href="{{ path("myshop.admin_editor_product_list") }}"> Product</a><br>
+            <a href="{{ path("myshop.admin_editor_user_list") }}"> User</a>
+        </td>
+        <td valign="top">
+            {% for flash_message in app.session.flashBag.get('success') %}
+                <b style="color: green">{{ flash_message }}</b>
+            {% endfor %}
+
+            {% for flash_message in app.session.flashBag.get('error') %}
+                <b style="color: red">{{ flash_message }}</b>
+            {% endfor %}
+
+            <br>
+            {% block body %}
+            {% endblock %}
+        </td>
+    </tr>
+</table>
+</body>
+</html>

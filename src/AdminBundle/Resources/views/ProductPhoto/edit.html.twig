@@ -1,0 +1,9 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body%}
+    <h3>Add photo to product {{ product.model }}</h3>
+    <form enctype="multipart/form-data" method="post" action="{{path('myshop.admin_editor_photo_edit', {id:photo.id})}}">
+        {{ form_widget(form) }}
+        <input type="submit" />
+    </form>
+{% endblock %}

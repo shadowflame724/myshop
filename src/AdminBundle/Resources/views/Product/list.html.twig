@@ -1,0 +1,32 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body %}
+    <a href="{{ path("myshop.admin_editor_product_add") }}">Add Product</a>
+    <ul>
+        <table border="1">
+            <tr>
+                <td>Category:</td>
+                <td>Company:</td>
+                <td>Country:</td>
+                <td>Model:</td>
+                <td>Price:</td>
+                <td>Icon:</td>
+            </tr>
+            {% for product in productList %}
+                <tr>
+                    <td>{{ product.getCategory().getName() }}</td>
+                    <td>{{ product.getManufacturer().getCompany() }}</td>
+                    <td>{{ product.getManufacturer().getCountry() }}</td>
+                    <td>{{ product.model }}</td>
+                    <td>{{ product.price }}</td>
+                    <td><img src="/icons/{{ product.iconFileName }}"></td>
+                    <td><a href="{{ path("myshop.admin_editor_product_edit", {id:product.id}) }}">Edit</a></td>
+                    <td><a href="{{ path("myshop.admin_editor_product_delete", {id:product.id}) }}">Delete</a><br/></td>
+                    <td><a href="{{ path("myshop.admin_editor_photo_list", {id:product.id}) }}">Photo editor</a><br/>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </ul>
+
+{% endblock %}

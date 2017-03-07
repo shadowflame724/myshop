@@ -1,0 +1,9 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body%}
+    <form action="{{ path("myshop.admin_editor_product_add") }}" method="post" enctype="multipart/form-data">
+        {{ form_widget(form) }}
+        <input type="submit"/>
+    </form>
+
+{% endblock %}
