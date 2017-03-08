@@ -6,18 +6,21 @@ use AdminBundle\Entity\User;
 use DefaultBundle\Entity\Category;
 use DefaultBundle\Entity\Manufacturer;
 use DefaultBundle\Entity\Product;
+use DefaultBundle\Entity\ProductPhoto;
 
 class LoadPrevData
 {
     private $manager;
     private $kernel;
     private $encoder;
+    private $uploadImage;
 
-    public function __construct($manager, $kernel, $encoder)
+    public function __construct($manager, $kernel, $encoder, $uploadImage)
     {
         $this->manager = $manager;
         $this->kernel = $kernel;
         $this->encoder = $encoder;
+        $this->uploadImage = $uploadImage;
     }
 
     public function loadUser()
@@ -85,10 +88,10 @@ class LoadPrevData
         while(false !== ( $file = readdir($dir)) ) {
             if (( $file != '.' ) && ( $file != '..' )) {
                 if ( is_dir($src . '/' . $file) ) {
-                    $this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
+                    $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
                 }
                 else {
-                    copy($src . '/' . $file,$dst . '/' . $file);
+                    copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
         }
@@ -120,6 +123,38 @@ class LoadPrevData
 
             $manager->persist($product);
             $manager->flush();
+        }
+        return true;
+    }
+
+    public function loadPhoto()
+    {
+        $manager = $this->manager;
+        $kernel = $this->kernel;
+        $uploadImage = $this->uploadImage;
+        $src = $kernel->getRootDir() . "/" . "../" . "source/" . "photos/";
+        $dst = $kernel->getRootDir() . "/" . "../" . "web/" . "photos/";
+
+        $this->recurse_copy($src,$dst);
+        $dir = opendir($dst);
+        $productList  = $manager->getRepository("DefaultBundle:Product")->findAll();
+
+        foreach ($productList as $product){
+            while(false !== ( $file = readdir($dir)) ) {
+                $photo = new ProductPhoto();
+
+                $id = $product->getId();
+                $result = $uploadImage->uploadImage(null, $id, $file);
+
+                $photo->setTitle(rand(1000,9999));
+                $photo->setFileName($result->getPhotoFileName());
+                $photo->setSmallFileName($result->getSmallPhotoName());
+                $photo->setProduct($product);
+
+                $manager->persist($photo);
+                $manager->flush();
+            }
+            closedir($dir);
         }
         return true;
     }

@@ -40,4 +40,5 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@kernel"
             - "@security.password_encoder"
+            - "@myshop.admin_image_upload"
 

@@ -41,7 +41,7 @@ class UploadImageService
     /**
      * @return UploadImageResult
      */
-    public function uploadImage(UploadedFile $uploadedFile, $id, $photoFileName = null, $height = null, $weight = null)
+    public function uploadImage(UploadedFile $uploadedFile = null, $id, $photoFileName = null)
     {
         $imageNameGenerator = $this->imageNameGenerator;
         $checkImg = $this->checkImg;
@@ -52,19 +52,20 @@ class UploadImageService
         }
 
         $photoDirPath = $this->uploadImageRootDir;
-
-        try {
-            $checkImg->check($uploadedFile);
-        } catch (\InvalidArgumentException $ex) {
-            die("Image type error!");
+        if ($uploadedFile != null) {
+            try {
+                $checkImg->check($uploadedFile);
+            } catch (\InvalidArgumentException $ex) {
+                die("Image type error!");
+            }
+            try {
+                $uploadedFile->move($photoDirPath, $photoFileName);
+            } catch (\Exception $exception) {
+                echo "Can not move file!";
+                throw $exception;
+            }
         }
 
-        try {
-            $uploadedFile->move($photoDirPath, $photoFileName);
-        } catch (\Exception $exception) {
-            echo "Can not move file!";
-            throw $exception;
-        }
         $img = new ImageResize($photoDirPath . $photoFileName);
         $height = $this->supportImageTypeList[0][0];
         $weight = $this->supportImageTypeList[0][1];
