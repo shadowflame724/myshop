@@ -6,17 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DeleteUnusedImage extends Controller
 {
-    /**
-     * @var ImageDelete
-     */
-    private $imageDelete;
+
     private $uploadImageRootDir;
     private static $count = null;
-
-    public function __construct($imageDelete)
-    {
-        $this->imageDelete = $imageDelete;
-    }
 
     /**
      * @param mixed $uploadImageRootDir
@@ -26,27 +18,65 @@ class DeleteUnusedImage extends Controller
         $this->uploadImageRootDir = $uploadImageRootDir;
     }
 
-    public function deleteImg($dbNameList)
+    public function deleteImg($photosNameList, $iconsNameList)
     {
         $photoDirPath = $this->uploadImageRootDir;
-        $imageDelete = $this->imageDelete;
+        $iconDirPath = $this->uploadImageRootDir . "../icons/";
+        $fileNames = [];
 
-        foreach ($dbNameList as $item) {
+        foreach ($photosNameList as $item) {
             $nameArr[] = $item["fileName"];
         }
 
         if ($handle = opendir($photoDirPath)) {
             while (false !== ($file = readdir($handle))) {
-                if (!strstr($file, "_") AND strlen($file > 2)) {
+                if (!strstr($file, "_") AND ($file != '.') AND ($file != '..')) {
                     $fileNames[] = $file;
                 }
             }
             closedir($handle);
-            foreach ($fileNames as $photoFileName) {
-                if (in_array($photoFileName, $nameArr) == false) {
-                    self::$count+=2;
-                    $imageDelete->imageDelete($photoFileName);
+            if (count($fileNames) > 0) {
+                foreach ($fileNames as $photoFileName) {
+                    if (in_array($photoFileName, $nameArr) == false) {
+
+                        $smallPhotoName = "small_" . $photoFileName;
+                        $photoFile = $photoDirPath . $photoFileName;
+                        $smallPhotoFile = $photoDirPath . $smallPhotoName;
+
+                        if (file_exists($smallPhotoFile)) {
+                            unlink($smallPhotoFile);
+                            self::$count++;
+                        }
+                        if (file_exists($photoFile)) {
+                            unlink($photoFile);
+                            self::$count++;
+                        }
+                    }
                 }
+            }
+        }
+
+        foreach ($iconsNameList as $item) {
+            $nameArr[] = $item["iconFileName"];
+        }
+
+        if ($handle = opendir($iconDirPath)) {
+            while (false !== ($file = readdir($handle))) {
+                if (($file != '.') AND ($file != '..')) {
+                    $fileNames[] = $file;
+                }
+            }
+            closedir($handle);
+                if ($fileNames) {
+                    foreach ($fileNames as $iconFileName) {
+                        if (in_array($iconFileName, $nameArr) == false) {
+                            $iconFile = $iconDirPath . $iconFileName;
+                            if (file_exists($iconFile)) {
+                                unlink($iconFile);
+                                self::$count++;
+                            }
+                        }
+                    }
             }
         }
         return self::$count;

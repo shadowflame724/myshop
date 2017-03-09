@@ -40,7 +40,7 @@ class ProductPhoto
     /**
      * @var string
      *
-     * @ORM\Column(name="fileName", type="string", length=255, unique=true)
+     * @ORM\Column(name="fileName", type="string", length=255, unique=false)
      */
     private $fileName;
 

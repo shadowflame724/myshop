@@ -5,6 +5,9 @@ login:
 myshop.admin_prevdataload:
     path:     /prevdataload
     defaults: { _controller: AdminBundle:LoadPrevData:loadData }
+myshop.admin_cleaner:
+    path: /cleaner
+    defaults: { _controller: AdminBundle:Default:cleaner }
 
 myshop.admin_editor:
     path: /

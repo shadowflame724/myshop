@@ -89,7 +89,7 @@ class UploadImageService
             $iconFileName = $model . $imageNameGenerator->generateName() . "." . $uploadedFile->getClientOriginalExtension();
         }
 
-        $iconDirPath = $this->uploadImageRootDir . "../" . "icons/";
+        $iconDirPath = $this->uploadImageRootDir . "../icons/";
 
         try {
             $checkImg->check($uploadedFile);

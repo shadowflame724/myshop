@@ -13,14 +13,12 @@ class LoadPrevData
     private $manager;
     private $kernel;
     private $encoder;
-    private $uploadImage;
 
-    public function __construct($manager, $kernel, $encoder, $uploadImage)
+    public function __construct($manager, $kernel, $encoder)
     {
         $this->manager = $manager;
         $this->kernel = $kernel;
         $this->encoder = $encoder;
-        $this->uploadImage = $uploadImage;
     }
 
     public function loadUser()
@@ -82,15 +80,15 @@ class LoadPrevData
         return true;
     }
 
-    private function recurse_copy($src,$dst) {
+    private function recurse_copy($src, $dst)
+    {
         $dir = opendir($src);
         @mkdir($dst);
-        while(false !== ( $file = readdir($dir)) ) {
-            if (( $file != '.' ) && ( $file != '..' )) {
-                if ( is_dir($src . '/' . $file) ) {
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                if (is_dir($src . '/' . $file)) {
                     $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
-                }
-                else {
+                } else {
                     copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
@@ -101,24 +99,19 @@ class LoadPrevData
     public function loadProduct()
     {
         $manager = $this->manager;
-        $kernel = $this->kernel;
-
-        $src = $kernel->getRootDir() . "/" . "../" . "source/" . "icons/";
-        $dst = $kernel->getRootDir() . "/" . "../" . "web/" . "icons/";
-        $this->recurse_copy($src,$dst);
 
         for ($i = 1; $i <= 10; $i++) {
             $product = new Product();
             $product->setModel($i . "Model");
             $product->setPrice(rand(100, 999));
 
-            $category = $manager->getRepository("DefaultBundle:Category")->find(rand(1,10));
+            $category = $manager->getRepository("DefaultBundle:Category")->find(rand(1, 10));
             $product->setCategory($category);
 
-            $manufacturer = $manager->getRepository("DefaultBundle:Manufacturer")->find(rand(1,10));
+            $manufacturer = $manager->getRepository("DefaultBundle:Manufacturer")->find(rand(1, 10));
             $product->setManufacturer($manufacturer);
 
-            $product->setIconFileName($i . "model" . "." . "jpg");
+            $product->setIconFileName($i . "model.jpg");
             $product->setDescription("Some description for some product");
 
             $manager->persist($product);
@@ -130,31 +123,21 @@ class LoadPrevData
     public function loadPhoto()
     {
         $manager = $this->manager;
-        $kernel = $this->kernel;
-        $uploadImage = $this->uploadImage;
-        $src = $kernel->getRootDir() . "/" . "../" . "source/" . "photos/";
-        $dst = $kernel->getRootDir() . "/" . "../" . "web/" . "photos/";
 
-        $this->recurse_copy($src,$dst);
-        $dir = opendir($dst);
-        $productList  = $manager->getRepository("DefaultBundle:Product")->findAll();
+        $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
 
-        foreach ($productList as $product){
-            while(false !== ( $file = readdir($dir)) ) {
+        foreach ($productList as $product) {
+            for ($i = 1; $i <= 3; $i++) {
                 $photo = new ProductPhoto();
 
-                $id = $product->getId();
-                $result = $uploadImage->uploadImage(null, $id, $file);
-
-                $photo->setTitle(rand(1000,9999));
-                $photo->setFileName($result->getPhotoFileName());
-                $photo->setSmallFileName($result->getSmallPhotoName());
+                $photo->setTitle(rand(1000, 9999));
+                $photo->setFileName($i . "photo.jpg");
+                $photo->setSmallFileName("small_" . $i . "photo.jpg");
                 $photo->setProduct($product);
 
                 $manager->persist($photo);
                 $manager->flush();
             }
-            closedir($dir);
         }
         return true;
     }
