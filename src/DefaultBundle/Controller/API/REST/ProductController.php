@@ -12,7 +12,7 @@ class ProductController extends Controller
     {
         /** @var \DefaultBundle\Entity\Product $productList */
         $productList = $this->getDoctrine()->getManager()->getRepository("DefaultBundle:Product")->findAll();
-        $iconDir = "" . "/icons";
+        $iconDir = "http://127.0.0.1:8000/web/icons";
 
         $productArray = [];
         foreach ($productList as $product){
@@ -24,7 +24,7 @@ class ProductController extends Controller
                 'date' => $product->getAddDate()->format('d.m.Y'),
                 'company' => $product->getManufacturer()->getCompany(),
                 'category' => $product->getCategory()->getName(),
-                'iconFileName' => $product->getIconFileName()
+                'iconFileName' => $iconDir . $product->getIconFileName()
             ];
         }
 
@@ -39,7 +39,7 @@ class ProductController extends Controller
                 'date' => $product->getAddDate()->format('d.m.Y'),
                 'company' => $product->getManufacturer()->getCompany(),
                 'category' => $product->getCategory()->getName(),
-                'iconFileName' => $product->getIconFileName()
+                'iconFileName' => $iconDir . $product->getIconFileName()
             ];
         }
         $response = new JsonResponse($productArray);
