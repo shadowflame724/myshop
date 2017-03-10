@@ -7,6 +7,7 @@ use DefaultBundle\Entity\Category;
 use DefaultBundle\Entity\Manufacturer;
 use DefaultBundle\Entity\Product;
 use DefaultBundle\Entity\ProductPhoto;
+use Eventviva\ImageResize;
 
 class LoadPrevData
 {
@@ -100,22 +101,31 @@ class LoadPrevData
     {
         $manager = $this->manager;
 
-        for ($i = 1; $i <= 10; $i++) {
-            $product = new Product();
-            $product->setModel($i . "Model");
-            $product->setPrice(rand(100, 999));
+        $src = $this->kernel->getRootDir() . "/../source/icons/";
+        $dst = $this->kernel->getRootDir() . "/../web/icons/";
+        $dir = opendir($src);
+        @mkdir($dst);
 
-            $category = $manager->getRepository("DefaultBundle:Category")->find(rand(1, 10));
-            $product->setCategory($category);
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                $newIconFileName = rand(1000, 9999) . ".jpg";
+                copy($src . $file, $dst . $newIconFileName);
+                $product = new Product();
+                $product->setModel("Model" . rand(100, 999));
+                $product->setPrice(rand(100, 999));
 
-            $manufacturer = $manager->getRepository("DefaultBundle:Manufacturer")->find(rand(1, 10));
-            $product->setManufacturer($manufacturer);
+                $category = $manager->getRepository("DefaultBundle:Category")->find(rand(1, 10));
+                $product->setCategory($category);
 
-            $product->setIconFileName($i . "model.jpg");
-            $product->setDescription("Some description for some product");
+                $manufacturer = $manager->getRepository("DefaultBundle:Manufacturer")->find(rand(1, 10));
+                $product->setManufacturer($manufacturer);
 
-            $manager->persist($product);
-            $manager->flush();
+                $product->setIconFileName($newIconFileName);
+                $product->setDescription("Some description for some product");
+
+                $manager->persist($product);
+                $manager->flush();
+            }
         }
         return true;
     }
@@ -124,20 +134,32 @@ class LoadPrevData
     {
         $manager = $this->manager;
 
+        $src = $this->kernel->getRootDir() . "/../source/photos/";
+        $dst = $this->kernel->getRootDir() . "/../web/photos/";
+
         $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
 
         foreach ($productList as $product) {
-            for ($i = 1; $i <= 3; $i++) {
-                $photo = new ProductPhoto();
+            $dir = opendir($src);
+            @mkdir($dst);
+            while (false !== ($file = readdir($dir))) {
+                if (($file != '.') && ($file != '..')) {
+                    $newPhotoName = rand(1000, 9999) . ".jpg";
+                    copy($src . $file, $dst . $newPhotoName);
+                    $photo = new ProductPhoto();
+                    $photo->setTitle(rand(1000, 9999));
+                    $photo->setFileName($newPhotoName);
+                    $img = new ImageResize($dst . $newPhotoName);
+                    $img->resizeToBestFit(250, 250);
+                    $img->save($dst . "small_" . $newPhotoName);
+                    $photo->setSmallFileName("small_" . $newPhotoName);
+                    $photo->setProduct($product);
 
-                $photo->setTitle(rand(1000, 9999));
-                $photo->setFileName($i . "photo.jpg");
-                $photo->setSmallFileName("small_" . $i . "photo.jpg");
-                $photo->setProduct($product);
-
-                $manager->persist($photo);
-                $manager->flush();
+                    $manager->persist($photo);
+                    $manager->flush();
+                }
             }
+            closedir($dir);
         }
         return true;
     }

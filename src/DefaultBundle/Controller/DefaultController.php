@@ -8,10 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    /**
-     * @Template
-     */
-    public function indexAction(Request $request, $id =null)
+    public function menuListAction()
     {
         $manager = $this->getDoctrine()->getManager();
         $categoryList = $manager
@@ -20,7 +17,6 @@ class DefaultController extends Controller
         //$catId = $request->get("catId");
         //$manId = $request->get("manId");
         $manufacturerList = $manager->getRepository("DefaultBundle:Manufacturer")->findAll();
-        $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
         /*
          * menu
          *
@@ -41,11 +37,22 @@ class DefaultController extends Controller
                 ->getResult();
         }
         */
+        return $this->render('@Default/layout.html.twig',
+            [
+                "categoryList" => $categoryList,
+                "manufacturerList" => $manufacturerList,
+            ]);
+    }
 
+    /**
+     * @Template
+     */
+    public function indexAction(Request $request, $id = null)
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
         return [
             "productList" => $productList,
-            "categoryList" => $categoryList,
-            "manufacturerList" => $manufacturerList,
         ];
     }
 
@@ -54,8 +61,6 @@ class DefaultController extends Controller
      */
     public function singleAction(Request $request, $id)
     {
-        $list = $this->indexAction($request);
-
         $product = $this->getDoctrine()->getManager()->getRepository("DefaultBundle:Product")->find($id);
         $productCategory = $product->getCategory();
         $similarProductList = $this->getDoctrine()->getManager()
@@ -65,8 +70,6 @@ class DefaultController extends Controller
         return [
             "product" => $product,
             "similarProductList" => $similarProductList,
-            "categoryList" => $list["categoryList"],
-            "manufacturerList" => $list["manufacturerList"]
         ];
     }
 }

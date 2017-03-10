@@ -42,6 +42,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <script>$(document).ready(function () {
             $(".memenu").memenu();
         });</script>
+    {{ render(controller('DefaultBundle:Default:menuList')) }}
 </head>
 <body>
 <!--top-header-->
@@ -82,7 +83,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         <div class="top-nav">
             <ul class="memenu skyblue">
                 <li class="active"><a href="{{ path("myshop.index") }}">Home</a></li>
-
                 <li class="grid"><a href="#">Categories</a>
                     <div class="mepanel">
                         <div class="row">
