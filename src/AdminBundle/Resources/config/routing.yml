@@ -4,7 +4,7 @@ login:
 
 myshop.admin_prevdataload:
     path:     /prevdataload
-    defaults: { _controller: AdminBundle:LoadPrevData:loadData }
+    defaults: { _controller: AdminBundle:Default:loadData }
 myshop.admin_cleaner:
     path: /cleaner
     defaults: { _controller: AdminBundle:Default:cleaner }
@@ -103,3 +103,23 @@ myshop.admin_editor_user_delete:
     defaults: { _controller: AdminBundle:User:delete }
     requirements:
           id: \d+
+
+myshop.admin_editor_saleproduct_list:
+    path: /sale/list
+    defaults: { _controller: AdminBundle:SaleProduct:list}
+
+myshop.admin_editor_saleproduct_add:
+    path: /sale/add/{id}
+    defaults: { _controller: AdminBundle:SaleProduct:add}
+    requirements:
+          id: \d+
+myshop.admin_editor_saleproduct_edit:
+    path: /sale/edit/{id}
+    defaults: { _controller: AdminBundle:SaleProduct:edit}
+    requirements:
+          id: \d+
+myshop.admin_editor_saleproduct_delete:
+    path: /sale/delete/{id}
+    defaults: { _controller: AdminBundle:SaleProduct:delete}
+    requirements:
+          id: \d+          

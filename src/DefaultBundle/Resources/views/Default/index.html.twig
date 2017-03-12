@@ -17,52 +17,6 @@
         </div>
         <div class="clearfix"></div>
     </div>
-    <!--banner-ends-->
-    <!--Slider-Starts-Here-->
-    <script src="{{ asset('bundles/default/js/responsiveslides.min.js') }}"></script>
-    <script>
-        // You can also use "$(window).load(function() {"
-        $(function () {
-            // Slideshow 4
-            $("#slider4").responsiveSlides({
-                auto: true,
-                pager: true,
-                nav: false,
-                speed: 500,
-                namespace: "callbacks",
-                before: function () {
-                    $('.events').append("<li>before event fired.</li>");
-                },
-                after: function () {
-                    $('.events').append("<li>after event fired.</li>");
-                }
-            });
-        });
-    </script>
-    <!--End-slider-script-->
-    <!--start-banner-bottom-->
-    <div class="banner-bottom">
-        <div class="container">
-            <div class="banner-bottom-top">
-                <div class="col-md-6 banner-bottom-left">
-                    <div class="bnr-one">
-                        <div class="bnr-left">
-                            <h1><a href="single.html">Sale Product</a></h1>
-                            <p>Hurry up! Only to %some_date%</p>
-                            <div class="b-btn">
-                                <a href="single.html">SHOP NOW</a>
-                            </div>
-                        </div>
-                        <div class="bnr-right">
-                            <a href="single.html"><img src="images/b-1.jpg" alt=""/></a>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 
 {% block productsList %}

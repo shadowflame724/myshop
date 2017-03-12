@@ -44,4 +44,20 @@ class DefaultController extends Controller
         }
         return $this->redirectToRoute("myshop.admin_editor");
     }
+    public function loadDataAction()
+    {
+        $loader = $this->get("myshop.admin_loader");
+        try {
+            $loader->loadUser();
+            $loader->loadManufacturer();
+            $loader->loadCategory();
+            $loader->loadProduct();
+            $loader->loadPhoto();
+        } catch (Exception $ex) {
+            $this->addFlash("error", "something went wrong =( : " . $ex);
+            return $this->redirectToRoute("myshop.admin_editor_product_list");
+        }
+        $this->addFlash("success", "Preview data success added!");
+        return $this->redirectToRoute("myshop.admin_editor_product_list");
+    }
 }

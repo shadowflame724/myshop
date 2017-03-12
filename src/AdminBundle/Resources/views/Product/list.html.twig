@@ -24,6 +24,8 @@
                     <td><a href="{{ path("myshop.admin_editor_product_delete", {id:product.id}) }}">Delete</a><br/></td>
                     <td><a href="{{ path("myshop.admin_editor_photo_list", {id:product.id}) }}">Photo editor</a><br/>
                     </td>
+                    <td><a href="{{ path("myshop.admin_editor_saleproduct_add", {id:product.id}) }}">Add SALE</a><br/>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
