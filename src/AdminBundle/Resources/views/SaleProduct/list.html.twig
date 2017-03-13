@@ -1,0 +1,25 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body%}
+    <ul>
+        <table border="1">
+            <tr>
+                <td>Model:</td>
+                <td>Sale price:</td>
+                <td>Sale date:</td>
+                <td>Sale description:</td>
+            </tr>
+            {% for saleProduct in saleProductList %}
+                <tr>
+                    <td>{{ saleProduct.getProduct().getModel() }}</td>
+                    <td>{{ saleProduct.getSalePrice() }}</a></td>
+                    <td>{{ saleProduct.getSaleDate()|date("m/d/Y") }}</a></td>
+                    <td>{{ saleProduct.getSaleDescription() }}</a></td>
+                    <td><a href="{{ path("myshop.admin_editor_saleproduct_edit", {id:saleProduct.id}) }}">Edit</a></td>
+                    <td><a href="{{ path("myshop.admin_editor_saleproduct_delete", {id:saleProduct.id}) }}">Delete</a><br/></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </ul>
+
+{% endblock %}

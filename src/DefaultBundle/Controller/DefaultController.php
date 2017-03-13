@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    public function menuListAction()
+    public function menuListAction(Request $request)
     {
         $manager = $this->getDoctrine()->getManager();
         $categoryList = $manager
@@ -37,7 +37,7 @@ class DefaultController extends Controller
                 ->getResult();
         }
         */
-        return $this->render('@Default/layout.html.twig',
+        return $this->render('@Default/menuList.html.twig',
             [
                 "categoryList" => $categoryList,
                 "manufacturerList" => $manufacturerList,
@@ -51,8 +51,11 @@ class DefaultController extends Controller
     {
         $manager = $this->getDoctrine()->getManager();
         $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
+        //$saleProductList = array_rand( $manager->getRepository("DefaultBundle:SaleProduct")->findAll(), 2);
+
         return [
             "productList" => $productList,
+        //    "saleProductList" => $saleProductList
         ];
     }
 

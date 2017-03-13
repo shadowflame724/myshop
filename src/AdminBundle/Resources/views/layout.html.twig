@@ -16,7 +16,8 @@
             <a href="{{ path("myshop.admin_editor_category_list") }}"> Category</a><br>
             <a href="{{ path("myshop.admin_editor_manufacturer_list") }}"> Manufacturer</a><br>
             <a href="{{ path("myshop.admin_editor_product_list") }}"> Product</a><br>
-            <a href="{{ path("myshop.admin_editor_user_list") }}"> User</a>
+            <a href="{{ path("myshop.admin_editor_user_list") }}"> User</a><br>
+            <a href="{{ path("myshop.admin_editor_saleproduct_list") }}"> SaleProduct List</a>
         </td>
         <td valign="top">
             {% for flash_message in app.session.flashBag.get('success') %}
