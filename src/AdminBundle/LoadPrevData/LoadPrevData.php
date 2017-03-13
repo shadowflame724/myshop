@@ -7,7 +7,9 @@ use DefaultBundle\Entity\Category;
 use DefaultBundle\Entity\Manufacturer;
 use DefaultBundle\Entity\Product;
 use DefaultBundle\Entity\ProductPhoto;
+use DefaultBundle\Entity\SaleProduct;
 use Eventviva\ImageResize;
+use Intervention\Image\ImageManager;
 
 class LoadPrevData
 {
@@ -163,4 +165,34 @@ class LoadPrevData
         }
         return true;
     }
+
+    public function loadSaleProduct()
+    {
+        $manager = $this->manager;
+        $kernel = $this->kernel;
+
+        $image = new ImageManager(array('driver' => 'gd'));
+
+        $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
+        $randProduct = array_rand($productList, 2);
+
+        foreach ($randProduct as $product) {
+            $saleProduct = new SaleProduct();
+
+            $saleProduct->setProduct($product);
+
+            $iconFileName = $kernel->getRootDir() . "/../web/icons/" . $product->getIconFileName();
+            $saleStamp = $kernel->getRootDir() . "/../source/SalePhoto/SalePhoto.png";
+
+            $image->make($iconFileName)->resize(200, 130)->insert($saleStamp)
+                ->save($kernel->getRootDir() . "/../web/SalePhoto/" . $product->getIconFileName());
+
+            $saleProduct->setSalePhoto($product->getIconFileName());
+
+            $manager->persist($saleProduct);
+            $manager->flush();
+        }
+        return true;
+    }
+
 }

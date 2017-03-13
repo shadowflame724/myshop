@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "edeb37172821ff08c5dbb080538b35b7",
+    "content-hash": "b133cc6df86b0ca869cd5183360c3605",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -777,16 +777,16 @@
         },
         {
             "name": "eventviva/php-image-resize",
-            "version": "1.6.2",
+            "version": "1.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eventviva/php-image-resize.git",
-                "reference": "8c086aad961c082939ee9e42f83f536f37b73b00"
+                "reference": "e2c84b6db5fe6c45af27e7fc9f37d5874037a0ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eventviva/php-image-resize/zipball/8c086aad961c082939ee9e42f83f536f37b73b00",
-                "reference": "8c086aad961c082939ee9e42f83f536f37b73b00",
+                "url": "https://api.github.com/repos/eventviva/php-image-resize/zipball/e2c84b6db5fe6c45af27e7fc9f37d5874037a0ff",
+                "reference": "e2c84b6db5fe6c45af27e7fc9f37d5874037a0ff",
                 "shasum": ""
             },
             "require": {
@@ -818,7 +818,7 @@
                 "resize",
                 "scale"
             ],
-            "time": "2017-01-19T10:34:05+00:00"
+            "time": "2017-03-13T06:49:18+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1050,16 +1050,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.22.0",
+            "version": "1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558"
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bad29cb8d18ab0315e6c477751418a82c850d558",
-                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1e044bc4b34e91743943479f1be7a1d5eb93add0",
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0",
                 "shasum": ""
             },
             "require": {
@@ -1124,7 +1124,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-11-26T00:15:39+00:00"
+            "time": "2017-03-13T07:08:03+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -2374,7 +2374,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.0"
+        "php": ">=5.5.9"
     },
     "platform-dev": []
 }
