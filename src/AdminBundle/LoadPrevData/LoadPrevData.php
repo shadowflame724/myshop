@@ -171,23 +171,34 @@ class LoadPrevData
         $manager = $this->manager;
         $kernel = $this->kernel;
 
+        $dst = $kernel->getRootDir() . "/../web/SalePhoto/";
+        @mkdir($dst);
         $image = new ImageManager(array('driver' => 'gd'));
 
         $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
         $randProduct = array_rand($productList, 2);
 
+        var_dump($randProduct);
         foreach ($randProduct as $product) {
             $saleProduct = new SaleProduct();
 
-            $saleProduct->setProduct($product);
+            $saleProduct->setProduct($productList[$product]);
 
-            $iconFileName = $kernel->getRootDir() . "/../web/icons/" . $product->getIconFileName();
+            $iconFileName = $kernel->getRootDir() . "/../web/icons/" . $productList[$product]->getIconFileName();
             $saleStamp = $kernel->getRootDir() . "/../source/SalePhoto/SalePhoto.png";
 
-            $image->make($iconFileName)->resize(200, 130)->insert($saleStamp)
-                ->save($kernel->getRootDir() . "/../web/SalePhoto/" . $product->getIconFileName());
+            $image = new ImageManager(array('driver' => 'gd'));
 
-            $saleProduct->setSalePhoto($product->getIconFileName());
+            $image->make($iconFileName)->resize(200, 130)->insert($saleStamp)
+                ->save($dst . $productList[$product]->getIconFileName());
+
+            $saleProduct->setSalePhoto($productList[$product]->getIconFileName());
+            $saleProduct->setSalePrice(rand(00,99));
+
+            $date = new \DateTime("now");
+
+            $saleProduct->setSaleDate($date);
+            $saleProduct->setSaleDescription(rand("1234567890", "1234567890"));
 
             $manager->persist($saleProduct);
             $manager->flush();
