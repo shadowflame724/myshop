@@ -18,9 +18,7 @@ class ProductController extends Controller
      */
     public function listAction()
     {
-        $productList = $this->getDoctrine()->getManager()
-            ->createQuery("select p, c, m from DefaultBundle:Product p join p.category c join p.manufacturer m")
-            ->getResult();
+        $productList = $this->getDoctrine()->getRepository("DefaultBundle:Product")->findAll();
         return ["productList" => $productList];
     }
 
@@ -128,8 +126,7 @@ class ProductController extends Controller
     /**
      * @Template()
      */
-    public
-    function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $id)
     {
         $manager = $this->getDoctrine()->getManager();
         $product = $this->getDoctrine()->getRepository("DefaultBundle:Product")->find($id);
@@ -137,7 +134,7 @@ class ProductController extends Controller
 
         foreach ($photos as $photo) {
             $photoFileName = $photo->getFileName();
-            $this->get("myshop.admin_image_delete")->imageDelete($photoFileName);
+            $this->get("myshop.admin_image_delete")->imageDelete($photoFileName, $product->getIconFileName());
             $manager->remove($photo);
         }
 

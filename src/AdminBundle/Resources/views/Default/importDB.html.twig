@@ -1,0 +1,9 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body%}
+    <form enctype="multipart/form-data" method="POST" action="{{path('myshop.admin_import')}}">
+        Clear DB, before import??? ----> <input type="checkbox" name="flag">
+        {{ form_widget(form) }}
+        <input type="submit" />
+    </form>
+{% endblock %}

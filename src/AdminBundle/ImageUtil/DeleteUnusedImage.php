@@ -2,20 +2,23 @@
 
 namespace AdminBundle\ImageUtil;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DeleteUnusedImage extends Controller
 {
-    /**
-     * @var ImageDelete
-     */
-    private $imageDelete;
+
     private $uploadImageRootDir;
+    /**
+     * @var EntityManager
+     */
+    private $manager;
     private static $count = null;
 
-    public function __construct($imageDelete)
+    public function __construct(EntityManagerInterface $manager)
     {
-        $this->imageDelete = $imageDelete;
+        $this->manager = $manager;
     }
 
     /**
@@ -26,26 +29,66 @@ class DeleteUnusedImage extends Controller
         $this->uploadImageRootDir = $uploadImageRootDir;
     }
 
-    public function deleteImg($dbNameList)
+    public function deleteImg()
     {
+        $manager = $this->manager;
         $photoDirPath = $this->uploadImageRootDir;
-        $imageDelete = $this->imageDelete;
+        $iconDirPath = $this->uploadImageRootDir . "../icons/";
+        $saleDirPath = $this->uploadImageRootDir . "../SalePhoto/";
+        $nameArr = [];
 
-        foreach ($dbNameList as $item) {
+        $iconNameList = $this->manager
+            ->createQuery("select i.iconFileName from DefaultBundle:Product i")
+            ->getResult();
+        $photoNamesList = $manager
+            ->createQuery("select p.fileName from DefaultBundle:ProductPhoto p")
+            ->getResult();
+        $saleNamesList = $manager
+            ->createQuery("select s.salePhoto from DefaultBundle:SaleProduct s")
+            ->getResult();
+
+        foreach ($photoNamesList as $item) {
             $nameArr[] = $item["fileName"];
+            $nameArr[] = "small_" . $item["fileName"];
         }
 
-        if ($handle = opendir($photoDirPath)) {
+        self::$count = $this->delete($photoDirPath, $nameArr);
+
+
+        foreach ($iconNameList as $item) {
+            $nameArr[] = $item["iconFileName"];
+        }
+        self::$count = $this->delete($iconDirPath, $nameArr);
+
+        foreach ($saleNamesList as $item) {
+            $nameArr[] = $item["salePhoto"];
+        }
+
+        self::$count = $this->delete($saleDirPath, $nameArr);
+
+
+        return self::$count;
+    }
+
+    private function delete($dir, $nameArr = null)
+    {
+        $fileNames = [];
+        if ($handle = opendir($dir)) {
             while (false !== ($file = readdir($handle))) {
-                if (!strstr($file, "_") AND strlen($file > 2)) {
+                if (($file != '.') AND ($file != '..')) {
                     $fileNames[] = $file;
                 }
             }
             closedir($handle);
-            foreach ($fileNames as $photoFileName) {
-                if (in_array($photoFileName, $nameArr) == false) {
-                    self::$count+=2;
-                    $imageDelete->imageDelete($photoFileName);
+            foreach ($fileNames as $fileName) {
+                $fullFileName = $dir . $fileName;
+                if ($nameArr != null AND file_exists($fullFileName)) {
+                    unlink($fullFileName);
+                    self::$count++;
+                    return self::$count;
+                } elseif (in_array($fileName, $nameArr) == false AND file_exists($fullFileName)) {
+                    unlink($fullFileName);
+                    self::$count++;
                 }
             }
         }

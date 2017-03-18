@@ -77,114 +77,25 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </div>
 <!--top-header-->
 <!--bottom-header-->
-<div class="header-bottom">
-    <div class="container">
-        <div class="top-nav">
-            <ul class="memenu skyblue">
-                <li class="active"><a href="{{ path("myshop.index") }}">Home</a></li>
-
-                <li class="grid"><a href="#">Categories</a>
-                    <div class="mepanel">
-                        <div class="row">
-                            <div class="col1 me-one">
-                                {% for category in categoryList %}
-                                    <h4>{{ category.name }}</h4>
-                                    {% if category.ChildrenCategories %}
-                                        <ul>
-                                            {% for child in category.ChildrenCategories %}
-                                                <li>
-                                                    <a href="{{ path("myshop.index", {catId:child.id}) }}">{{ child.name }}</a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="grid"><a href="#">Manufacturers</a>
-                    <div class="mepanel">
-                        <div class="row">
-                            <div class="col1 me-one">
-                                {% for manufacturer in manufacturerList %}
-                                    <ul>
-                                        <li>
-                                            <a href="{{ path("myshop.index", {manId:manufacturer.id}) }}">{{ manufacturer.company }}</a>
-                                        </li>
-                                    </ul>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="grid"><a href="#">About us</a>
-                    <div class="mepanel">
-                        <div class="row">
-                            <div class="col1 me-one">
-                                <ul>
-                                    <li><a href="#">Who We Are</a></li>
-                                    <li><a href="contact.html">Contact Us</a></li>
-                                    <li><a href="#">In The News</a></li>
-                                    <li><a href="#">Team</a></li>
-                                    <li><a href="#">Carrers</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="grid"><a href="#">Your Account</a>
-                    <div class="mepanel">
-                        <div class="row">
-                            <div class="col1 me-one">
-                                <ul>
-                                    <li><a href="account.html">Your Account</a></li>
-                                    <li><a href="#">Personal Information</a></li>
-                                    <li><a href="contact.html">Addresses</a></li>
-                                    <li><a href="#">Discount</a></li>
-                                    <li><a href="#">Track your order</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-
-                <li class="grid"><a href="#">Customer service</a>
-                    <div class="mepanel">
-                        <div class="row">
-                            <div class="col1 me-one">
-                                <ul>
-                                    <li><a href="account.html">Your Account</a></li>
-                                    <li><a href="#">Personal Information</a></li>
-                                    <li><a href="contact.html">Addresses</a></li>
-                                    <li><a href="#">Discount</a></li>
-                                    <li><a href="#">Track your order</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-</div>
+{{ render(controller('DefaultBundle:Default:menuList')) }}
 <!--bottom-header-->
 <!--banner-starts-->
 {% block banner %}
 
 {% endblock %}
+<!--banner-ends-->
+<!--Slider-Starts-Here-->
+
+<!--End-slider-script-->
+{% block saleProductList %}
+
+{% endblock %}
 <!--end-banner-bottom-->
 
 <!--start-productList-->
-            {% block productsList %}
+{% block productsList %}
 
-            {% endblock %}
+{% endblock %}
 
 <!--end-productList-->
 

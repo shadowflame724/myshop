@@ -14,15 +14,17 @@
             </tr>
             {% for product in productList %}
                 <tr>
-                    <td>{{ product.getCategory().getName() }}</td>
-                    <td>{{ product.getManufacturer().getCompany() }}</td>
-                    <td>{{ product.getManufacturer().getCountry() }}</td>
+                    <td>{% if product.getCategory() %}{{ product.getCategory().getName() }}{% endif %}</td>
+                    <td>{% if product.getManufacturer() %}{{ product.getManufacturer().getCompany() }}{% endif %}</td>
+                    <td>{% if product.getManufacturer() %}{{ product.getManufacturer().getCountry() }}{% endif %}</td>
                     <td>{{ product.model }}</td>
                     <td>{{ product.price }}</td>
                     <td><img src="/icons/{{ product.iconFileName }}"></td>
                     <td><a href="{{ path("myshop.admin_editor_product_edit", {id:product.id}) }}">Edit</a></td>
                     <td><a href="{{ path("myshop.admin_editor_product_delete", {id:product.id}) }}">Delete</a><br/></td>
                     <td><a href="{{ path("myshop.admin_editor_photo_list", {id:product.id}) }}">Photo editor</a><br/>
+                    </td>
+                    <td><a href="{{ path("myshop.admin_editor_saleproduct_add", {id:product.id}) }}">Add SALE</a><br/>
                     </td>
                 </tr>
             {% endfor %}

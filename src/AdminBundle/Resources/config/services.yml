@@ -24,6 +24,7 @@ services:
     myshop.admin_unused_image_delete:
         class: AdminBundle\ImageUtil\DeleteUnusedImage
         arguments:
+            - "@doctrine.orm.entity_manager"
             - "@myshop.admin_image_delete"
         calls:
             - ["setUploadImageRootDir", ["%image_upload_dir%"]]
@@ -34,3 +35,15 @@ services:
             - "@mailer"
             - "@templating"
 
+    myshop.admin_loader:
+            class: AdminBundle\LoadPrevData\LoadPrevData
+            arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@kernel"
+            - "@security.password_encoder"
+
+    myshop.admin_imex:
+            class: AdminBundle\Util\ImportExport
+            arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@kernel"

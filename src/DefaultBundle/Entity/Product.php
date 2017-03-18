@@ -38,7 +38,7 @@ class Product
     /**
      * @return string
      */
-    public function getIconFileName(): string
+    public function getIconFileName()
     {
         return $this->iconFileName;
     }
@@ -46,7 +46,7 @@ class Product
     /**
      * @param string $iconFileName
      */
-    public function setIconFileName(string $iconFileName)
+    public function setIconFileName($iconFileName)
     {
         $this->iconFileName = $iconFileName;
     }
