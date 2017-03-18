@@ -42,3 +42,8 @@ services:
             - "@kernel"
             - "@security.password_encoder"
 
+    myshop.admin_imex:
+            class: AdminBundle\Util\ImportExport
+            arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@kernel"

@@ -51,12 +51,7 @@ class DefaultController extends Controller
     {
         $manager = $this->getDoctrine()->getManager();
         $productList = $manager->getRepository("DefaultBundle:Product")->findAll();
-        $highest_id = $manager->createQueryBuilder()
-            ->select('MAX(e.id)')
-            ->from('DefaultBundle:SaleProduct', 'e')
-            ->getQuery()
-            ->getSingleScalarResult();
-        $saleProductList = $manager->getRepository("DefaultBundle:SaleProduct")->find(rand(0,$highest_id), rand(0,$highest_id));
+        $saleProductList = $manager->getRepository("DefaultBundle:SaleProduct")->findAll();
 
         return [
             "productList" => $productList,

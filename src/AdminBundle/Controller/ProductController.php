@@ -18,9 +18,7 @@ class ProductController extends Controller
      */
     public function listAction()
     {
-        $productList = $this->getDoctrine()->getManager()
-            ->createQuery("select p, c, m from DefaultBundle:Product p join p.category c join p.manufacturer m")
-            ->getResult();
+        $productList = $this->getDoctrine()->getRepository("DefaultBundle:Product")->findAll();
         return ["productList" => $productList];
     }
 

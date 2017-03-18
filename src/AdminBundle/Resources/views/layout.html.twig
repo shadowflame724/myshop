@@ -17,7 +17,9 @@
             <a href="{{ path("myshop.admin_editor_manufacturer_list") }}"> Manufacturer</a><br>
             <a href="{{ path("myshop.admin_editor_product_list") }}"> Product</a><br>
             <a href="{{ path("myshop.admin_editor_user_list") }}"> User</a><br>
-            <a href="{{ path("myshop.admin_editor_saleproduct_list") }}"> SaleProduct List</a>
+            <a href="{{ path("myshop.admin_editor_saleproduct_list") }}"> SaleProduct List</a><br>
+            <a href="{{ path("myshop.admin_export") }}"> Export BD</a><br>
+            <a href="{{ path("myshop.admin_import") }}"> Import BD</a><br>
         </td>
         <td valign="top">
             {% for flash_message in app.session.flashBag.get('success') %}

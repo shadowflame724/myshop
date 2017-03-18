@@ -7,6 +7,7 @@ use DefaultBundle\Form\SaleProductType;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -30,6 +31,7 @@ class SaleProductController extends Controller
      */
     public function addAction(Request $request, $id)
     {
+        $photoFile = null;
         $manager = $this->getDoctrine()->getManager();
         $product = $manager->getRepository("DefaultBundle:Product")->find($id);
         $test = $manager->createQuery("select s from DefaultBundle:SaleProduct s where s.product = '$id'")
@@ -62,24 +64,32 @@ class SaleProductController extends Controller
                 return $this->redirectToRoute("myshop.admin_editor_saleproduct_add", ["id" => $id]);
             }
             $saleProduct->setProduct($product);
+            $filesAr = $request->files->get("defaultbundle_saleproduct");
 
-            $iconFileName = $this->get("kernel")->getRootDir() . "/../web/icons/" . $product->getIconFileName();
-            $saleStamp = $this->get("kernel")->getRootDir() . "/../source/SalePhoto/SalePhoto.png";
 
-            $image = new ImageManager(array('driver' => 'gd'));
-
-            $image->make($iconFileName)->resize(200, 130)->insert($saleStamp)->save($this->get("kernel")->getRootDir() . "/../web/SalePhoto/" . $product->getIconFileName());
-
+            if ($filesAr["photoFile"] !== null) {
+                /** @var UploadedFile $photoFile */
+                $photoFile = $filesAr["photoFile"];
+            }
             $saleProduct->setSalePhoto($product->getIconFileName());
-            $manager->persist($saleProduct);
-            $manager->flush();
-            $this->addFlash(
-                'success',
-                'SaleProduct added!'
-            );
-            $notification = $this->get("myshop.admin_email_notification");
-            $body = "Sale to product " . $product->getModel() . " added";
-            $notification->sendAdminsEmail($body);
+            $result = $this->get("myshop.admin_image_upload")->uploadSale($photoFile, $product);
+            if ($result == true) {
+                $manager->persist($saleProduct);
+                $manager->flush();
+                $this->addFlash(
+                    'success',
+                    'SaleProduct added!'
+                );
+                $notification = $this->get("myshop.admin_email_notification");
+                $body = "Sale to product " . $product->getModel() . " added";
+                $notification->sendAdminsEmail($body);
+            }else {
+                $this->addFlash(
+                    'error',
+                    'SaleProduct not added!'
+                );
+            }
+
             return $this->redirectToRoute("myshop.admin_editor_saleproduct_list");
         }
         return [
@@ -137,7 +147,7 @@ class SaleProductController extends Controller
         $manager = $this->getDoctrine()->getManager();
         $salePhotoFile = $this->get("kernel")->getRootDir() . "/../web/SalePhoto/" . $saleProduct->getProduct()->getIconFileName();
 
-        if(file_exists($salePhotoFile)) {
+        if (file_exists($salePhotoFile)) {
             unlink($salePhotoFile);
         }
 
