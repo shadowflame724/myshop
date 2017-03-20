@@ -129,3 +129,21 @@ myshop.admin_export:
 myshop.admin_import:
     path: /import
     defaults: { _controller: AdminBundle:Default:importDB}
+
+myshop.admin_editor_page_list:
+    path: /page/list
+    defaults: { _controller: AdminBundle:Page:list}
+myshop.admin_editor_page_add:
+    path: /page/add
+    defaults: { _controller: AdminBundle:Page:add}
+myshop.admin_editor_page_edit:
+    path: /page/{id}/edit
+    defaults: { _controller: AdminBundle:Page:edit}
+    requirements:
+          id: \d+
+myshop.admin_editor_page_delete:
+    path: /page/{id}/delete
+    defaults: { _controller: AdminBundle:Page:delete}
+    requirements:
+          id: \d+
+
