@@ -25,6 +25,7 @@ services:
         class: AdminBundle\ImageUtil\DeleteUnusedImage
         arguments:
             - "@myshop.admin_image_delete"
+            - "@doctrine.orm.entity_manager"
         calls:
             - ["setUploadImageRootDir", ["%image_upload_dir%"]]
 

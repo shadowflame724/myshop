@@ -21,16 +21,7 @@ class DefaultController extends Controller
      */
     public function cleanerAction()
     {
-        $photosNameList = $this->getDoctrine()
-            ->getManager()
-            ->createQuery("select p.fileName from DefaultBundle:ProductPhoto p ")
-            ->getResult();
-        $iconsNameList = $this->getDoctrine()
-            ->getManager()
-            ->createQuery("select p.iconFileName from DefaultBundle:Product p ")
-            ->getResult();
-
-        $count = $this->get("myshop.admin_unused_image_delete")->deleteImg($photosNameList, $iconsNameList);
+        $count = $this->get("myshop.admin_unused_image_delete")->deleteImg();
         if ($count != null) {
             $this->addFlash(
                 'success',

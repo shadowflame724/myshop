@@ -10,6 +10,13 @@ class DeleteUnusedImage extends Controller
     private $uploadImageRootDir;
     private static $count = null;
 
+    private $doctrine;
+
+
+    public function __construct($doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
     /**
      * @param mixed $uploadImageRootDir
      */
@@ -18,11 +25,23 @@ class DeleteUnusedImage extends Controller
         $this->uploadImageRootDir = $uploadImageRootDir;
     }
 
-    public function deleteImg($photosNameList, $iconsNameList)
+    public function deleteImg()
     {
+        $doctrine = $this->doctrine;
         $photoDirPath = $this->uploadImageRootDir;
         $iconDirPath = $this->uploadImageRootDir . "../icons/";
+        $saleDirPath = $this->uploadImageRootDir . "../SalePhoto/";
         $fileNames = [];
+
+        $photosNameList = $doctrine->getManager()
+            ->createQuery("select p.fileName from DefaultBundle:ProductPhoto p ")
+            ->getResult();
+        $iconsNameList = $doctrine->getManager()
+            ->createQuery("select p.iconFileName from DefaultBundle:Product p ")
+            ->getResult();
+        $saleNameList = $doctrine->getManager()
+            ->createQuery("select p.salePhoto from DefaultBundle:SaleProduct p ")
+            ->getResult();
 
         foreach ($photosNameList as $item) {
             $nameArr[] = $item["fileName"];
@@ -57,8 +76,8 @@ class DeleteUnusedImage extends Controller
         }
 
         foreach ($iconsNameList as $item) {
-            $nameArr[] = $item["iconFileName"];
-        }
+        $nameArr[] = $item["iconFileName"];
+    }
 
         if ($handle = opendir($iconDirPath)) {
             while (false !== ($file = readdir($handle))) {
@@ -67,16 +86,40 @@ class DeleteUnusedImage extends Controller
                 }
             }
             closedir($handle);
-                if ($fileNames) {
-                    foreach ($fileNames as $iconFileName) {
-                        if (in_array($iconFileName, $nameArr) == false) {
-                            $iconFile = $iconDirPath . $iconFileName;
-                            if (file_exists($iconFile)) {
-                                unlink($iconFile);
-                                self::$count++;
-                            }
+            if ($fileNames) {
+                foreach ($fileNames as $iconFileName) {
+                    if (in_array($iconFileName, $nameArr) == false) {
+                        $iconFile = $iconDirPath . $iconFileName;
+                        if (file_exists($iconFile)) {
+                            unlink($iconFile);
+                            self::$count++;
                         }
                     }
+                }
+            }
+        }
+
+        foreach ($saleNameList as $item) {
+            $nameArr[] = $item["salePhoto"];
+        }
+
+        if ($handle = opendir($saleDirPath)) {
+            while (false !== ($file = readdir($handle))) {
+                if (($file != '.') AND ($file != '..')) {
+                    $fileNames[] = $file;
+                }
+            }
+            closedir($handle);
+            if ($fileNames) {
+                foreach ($fileNames as $saleFileName) {
+                    if (in_array($saleFileName, $nameArr) == false) {
+                        $salePhotoFile = $saleDirPath . $saleFileName;
+                        if (file_exists($salePhotoFile)) {
+                            unlink($salePhotoFile);
+                            self::$count++;
+                        }
+                    }
+                }
             }
         }
         return self::$count;
