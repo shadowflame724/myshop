@@ -3,6 +3,7 @@
 namespace DefaultBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,7 +16,12 @@ class SaleProductType extends AbstractType
     {
         $builder->add('salePrice')
             ->add('saleDate')
-            ->add('saleDescription');
+            ->add('saleDescription')
+            ->add("photoFile", FileType::class, [
+                "required" => false,
+                "label" => "SalePhoto",
+                "mapped" => false
+                ]);
     }
     
     /**

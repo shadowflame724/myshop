@@ -14,9 +14,9 @@
             </tr>
             {% for product in productList %}
                 <tr>
-                    <td>{{ product.getCategory().getName() }}</td>
-                    <td>{{ product.getManufacturer().getCompany() }}</td>
-                    <td>{{ product.getManufacturer().getCountry() }}</td>
+                    <td>{% if product.getCategory() %}{{ product.getCategory().getName() }}{% endif %}</td>
+                    <td>{% if product.getManufacturer() %}{{ product.getManufacturer().getCompany() }}{% endif %}</td>
+                    <td>{% if product.getManufacturer() %}{{ product.getManufacturer().getCountry() }}{% endif %}</td>
                     <td>{{ product.model }}</td>
                     <td>{{ product.price }}</td>
                     <td><img src="/icons/{{ product.iconFileName }}"></td>

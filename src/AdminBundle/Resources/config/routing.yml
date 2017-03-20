@@ -122,4 +122,10 @@ myshop.admin_editor_saleproduct_delete:
     path: /sale/delete/{id}
     defaults: { _controller: AdminBundle:SaleProduct:delete}
     requirements:
-          id: \d+          
+          id: \d+
+myshop.admin_export:
+    path: /export
+    defaults: { _controller: AdminBundle:Default:exportDB}
+myshop.admin_import:
+    path: /import
+    defaults: { _controller: AdminBundle:Default:importDB}

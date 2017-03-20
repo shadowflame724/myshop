@@ -4,6 +4,8 @@ namespace AdminBundle\ImageUtil;
 
 
 use AdminBundle\Controller\ProductController;
+use DefaultBundle\Entity\Product;
+use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use AdminBundle\DTO\UploadImageResult;
 use Eventviva\ImageResize;
@@ -20,7 +22,6 @@ class UploadImageService
      */
     private $imageNameGenerator;
     private $uploadImageRootDir;
-    private $smallPhotoName;
     private $supportImageTypeList;
 
     /**
@@ -108,5 +109,37 @@ class UploadImageService
         $img->save($iconDirPath . $iconFileName);
 
         return $iconFileName;
+    }
+    /**
+     * @return string
+     */
+    public function uploadSale(UploadedFile $uploadedFile = null, Product $product)
+    {
+        $checkImg = $this->checkImg;
+        $iconDirPath = $this->uploadImageRootDir . "../icons/";
+        $saleDirPath = $this->uploadImageRootDir . "../SalePhoto/";
+        $saleName = $product->getIconFileName();
+        $saleStamp = $this->uploadImageRootDir . "../../source/SalePhoto/SalePhoto.png";
+        $image = new ImageManager(array('driver' => 'gd'));
+
+        if ($uploadedFile == null){
+            copy($iconDirPath . $saleName, $saleDirPath . $saleName);
+        } else {
+            try {
+                $checkImg->check($uploadedFile);
+            } catch (\InvalidArgumentException $ex) {
+                die("Image type error!");
+            }
+            try {
+                $uploadedFile->move($saleDirPath, $saleName);
+            } catch (\Exception $exception) {
+                echo "Can not move file!";
+                throw $exception;
+            }
+        }
+        $salePhotoFile = $saleDirPath . $saleName;
+        $image->make($salePhotoFile)->resize(200, 130)->insert($saleStamp)->save();
+
+        return true;
     }
 }
