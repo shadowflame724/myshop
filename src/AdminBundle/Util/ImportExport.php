@@ -35,10 +35,10 @@ class ImportExport
         $manager = $this->manager;
         $kernel = $this->kernel;
         $csvDir = $kernel->getRootDir() ."/../source/CSV";
-        $csvIconDir = $kernel->getRootDir() ."/../source/CSV/icons";
-        $scrIconDir = $kernel->getRootDir() ."/../web/icons";
+
+        $url = "http://" . $_SERVER["SERVER_NAME"] . ":" .  $_SERVER['SERVER_PORT'];
+
         @mkdir($csvDir);
-        @mkdir($scrIconDir);
         $date = date_format(new \DateTime("now"), "Y-m-d");
         $csvFullName = $csvDir . "/dump_" . "$date" . ".csv";
         $products = $manager->getRepository("DefaultBundle:Product")->findAll();
@@ -49,8 +49,7 @@ class ImportExport
                 $product->getPrice() . "," .
                 date_format($product->getAddDate(), "Y-m-d H:i:s") . "," .
                 $product->getDescription() . "," .
-                $product->getIconFileName() . "," . "\n";
-            copy($scrIconDir . "/" .  $product->getIconFileName(), $csvIconDir . "/" .  $product->getIconFileName());
+                $url .  "/icons/" . $product->getIconFileName() . "," . "\n";
         }
         file_put_contents($csvFullName, $csv);
         return true;
@@ -60,8 +59,7 @@ class ImportExport
     {
         $manager = $this->manager;
         $kernel = $this->kernel;
-        $csvIconDir = $kernel->getRootDir() ."/../source/CSV/icons";
-        $scrIconDir = $kernel->getRootDir() ."/../web/icons";
+        $scrIconDir = $kernel->getRootDir() ."/../web/icons_2/";
         @mkdir($scrIconDir);
 
         $fh = fopen($filePath, "r");
@@ -76,15 +74,21 @@ class ImportExport
         fgetcsv($fh);
         while ( ($data = fgetcsv($fh)) != FALSE )
         {
+            $iconName = rand(1000, 9999);
+            $exArr = explode(".", $data[4]);
+            $extension = end($exArr);
             if ($data[0] !== "" and $data[1] !== "" and $data[2] !== "" and $data[3] !== ""
-                and $data[4] !== "") {
+                and $data[4] !== "" and ($extension == "png" || "jpg" || "jpeg" || "bmp" || "gif")) {
                 $product = new Product();
                 $product->setModel($data[0]);
                 $product->setPrice($data[1]);
                 $product->setAddDate(new \DateTime($data[2]));
                 $product->setDescription($data[3]);
                 $product->setIconFileName($data[4]);
-                copy($csvIconDir . "/" .  $data[4], $scrIconDir . "/" .  $data[4]);
+                try {copy($data[4], $scrIconDir .  $iconName . "." . $extension);}
+                catch (\Exception $ex){
+                    throw $ex;
+                }
                 $this->manager->persist($product);
                 $this->manager->flush();
             } else return false;

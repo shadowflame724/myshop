@@ -24,6 +24,7 @@ class DefaultController extends Controller
     public function exportDBAction()
     {
         $result = $this->get("myshop.admin_imex")->export();
+
         if ($result == true) {
             $this->addFlash(
                 'success',
