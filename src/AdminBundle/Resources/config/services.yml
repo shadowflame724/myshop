@@ -48,3 +48,4 @@ services:
             arguments:
             - "@doctrine.orm.entity_manager"
             - "@kernel"
+            - "@myshop.admin_check_img"

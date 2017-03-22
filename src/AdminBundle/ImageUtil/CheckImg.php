@@ -13,10 +13,23 @@ class CheckImg
         $this->supportImageTypeList = $imageTypeList;
     }
 
-    public function check(UploadedFile $photoFile)
+    public function check($photoFile)
+    {
+        if ($photoFile instanceof UploadedFile) {
+            $mimeType = $photoFile->getClientMimeType();
+            $fileExt = $photoFile->getClientOriginalExtension();
+        } else {
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer(file_get_contents($photoFile));
+            $fileExt = pathinfo($photoFile)['extension'];
+        }
+        $this->foo($mimeType,$fileExt);
+        return true;
+    }
+
+    public function foo($mimeType, $fileExt)
     {
         $checkTrue = false;
-        $mimeType = $photoFile->getClientMimeType();
         foreach ($this->supportImageTypeList as $imgType) {
             if ($mimeType == $imgType[1]) {
                 $checkTrue = true;
@@ -25,7 +38,6 @@ class CheckImg
         if ($checkTrue !== true) {
             throw new \InvalidArgumentException("Mime type is blocked!");
         }
-        $fileExt = $photoFile->getClientOriginalExtension();
         $checkTrue = false;
         foreach ($this->supportImageTypeList as $imgType) {
             if ($fileExt == $imgType[0]) {
@@ -37,4 +49,5 @@ class CheckImg
         }
         return true;
     }
+
 }
