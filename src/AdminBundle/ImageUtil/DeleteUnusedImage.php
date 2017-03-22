@@ -16,10 +16,12 @@ class DeleteUnusedImage extends Controller
     private $manager;
     private static $count = null;
 
+
     public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
     }
+
 
     /**
      * @param mixed $uploadImageRootDir
@@ -31,6 +33,7 @@ class DeleteUnusedImage extends Controller
 
     public function deleteImg()
     {
+
         $manager = $this->manager;
         $photoDirPath = $this->uploadImageRootDir;
         $iconDirPath = $this->uploadImageRootDir . "../icons/";
@@ -53,7 +56,6 @@ class DeleteUnusedImage extends Controller
         }
 
         self::$count = $this->delete($photoDirPath, $nameArr);
-
 
         foreach ($iconNameList as $item) {
             $nameArr[] = $item["iconFileName"];

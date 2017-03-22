@@ -15,3 +15,7 @@ product_info_rest_json:
     defaults: { _controller: DefaultBundle:API\REST\Product:productInfo, id:null }
     requirements:
           id: \d+
+
+myshop.page:
+    path:   /{pageKey}
+    defaults: { _controller: DefaultBundle:Page:index }

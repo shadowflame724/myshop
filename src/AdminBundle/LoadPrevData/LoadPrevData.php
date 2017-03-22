@@ -60,14 +60,14 @@ class LoadPrevData
         $manager = $this->manager;
         for ($i = 1; $i <= 5; $i++) {
             $category = new Category();
-            $category->setName("Root");
+            $category->setName("Root" . $i);
             $manager->persist($category);
             $manager->flush();
         }
         for ($i = 1; $i <= 5; $i++) {
             $parentCategory = $manager->getRepository("DefaultBundle:Category")->find($i);
             $category = new Category();
-            $category->setName("Child_1_lvl");
+            $category->setName("Child_1_lvl" . $i);
             $category->setParentCategory($parentCategory);
             $manager->persist($category);
             $manager->flush();
@@ -75,7 +75,7 @@ class LoadPrevData
         for ($i = 6; $i <= 10; $i++) {
             $parentCategory = $manager->getRepository("DefaultBundle:Category")->find($i);
             $category = new Category();
-            $category->setName("Child_2_lvl");
+            $category->setName("Child_2_lvl" . $i);
             $category->setParentCategory($parentCategory);
             $manager->persist($category);
             $manager->flush();

@@ -26,6 +26,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@myshop.admin_image_delete"
+            - "@doctrine.orm.entity_manager"
         calls:
             - ["setUploadImageRootDir", ["%image_upload_dir%"]]
 
@@ -47,3 +48,4 @@ services:
             arguments:
             - "@doctrine.orm.entity_manager"
             - "@kernel"
+            - "@myshop.admin_check_img"

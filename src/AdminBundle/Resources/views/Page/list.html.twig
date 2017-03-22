@@ -1,0 +1,26 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body %}
+    <a href="{{ path("myshop.admin_editor_page_add") }}">Add Page</a>
+    <ul>
+        <table border="1">
+        <tr>
+            <td>pageKey:</td>
+            <td>Title:</td>
+            <td>dateCreatedAt:</td>
+        </tr>
+        {% for page in pageList %}
+            <tr>
+                <td>{{ page.pageKey }}</td>
+                <td>{{ page.title }}</td>
+                <td>{{ page.dateCreatedAt.format("H:i:s d.m.Y") }}</td>
+                <td><a href="{{ path("myshop.admin_editor_page_edit", {id:page.id}) }}">Edit</a></td>
+                <td>
+                    <a href="{{ path("myshop.admin_editor_page_delete", {id:page.id}) }}">Delete</a><br/>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </ul>
+
+{% endblock %}

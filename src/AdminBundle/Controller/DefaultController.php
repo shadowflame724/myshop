@@ -24,6 +24,7 @@ class DefaultController extends Controller
     public function exportDBAction()
     {
         $result = $this->get("myshop.admin_imex")->export();
+
         if ($result == true) {
             $this->addFlash(
                 'success',
@@ -100,7 +101,7 @@ class DefaultController extends Controller
             $loader->loadProduct();
             $loader->loadPhoto();
             $loader->loadSaleProduct();
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->addFlash("error", "something went wrong =( : " . $ex);
             return $this->redirectToRoute("myshop.admin_editor_product_list");
         }
