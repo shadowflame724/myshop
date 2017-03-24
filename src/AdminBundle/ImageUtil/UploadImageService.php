@@ -49,7 +49,6 @@ class UploadImageService
 
         if ($photoFileName == null) {
             $photoFileName = $id . $imageNameGenerator->generateName() . "." . $uploadedFile->getClientOriginalExtension();
-
         }
 
         $photoDirPath = $this->uploadImageRootDir;

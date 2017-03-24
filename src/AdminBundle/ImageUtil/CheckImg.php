@@ -15,21 +15,15 @@ class CheckImg
 
     public function check($photoFile)
     {
+        $checkTrue = false;
         if ($photoFile instanceof UploadedFile) {
             $mimeType = $photoFile->getClientMimeType();
             $fileExt = $photoFile->getClientOriginalExtension();
-        } else {
+        } elseif(is_string($photoFile)) {
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer(file_get_contents($photoFile));
             $fileExt = pathinfo($photoFile)['extension'];
         }
-        $this->foo($mimeType,$fileExt);
-        return true;
-    }
-
-    public function foo($mimeType, $fileExt)
-    {
-        $checkTrue = false;
         foreach ($this->supportImageTypeList as $imgType) {
             if ($mimeType == $imgType[1]) {
                 $checkTrue = true;
@@ -49,5 +43,4 @@ class CheckImg
         }
         return true;
     }
-
 }
