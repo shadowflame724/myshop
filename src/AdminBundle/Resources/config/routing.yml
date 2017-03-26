@@ -50,8 +50,8 @@ myshop.admin_editor_manufacturer_delete:
           id: \d+
 
 myshop.admin_editor_product_list:
-    path: /product/list/{pag}
-    defaults: { _controller: AdminBundle:Product:list , pag: null}
+    path: /product/list
+    defaults: { _controller: AdminBundle:Product:list }
 myshop.admin_editor_product_add:
     path: /product/add
     defaults: { _controller: AdminBundle:Product:add }

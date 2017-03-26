@@ -12,6 +12,7 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: ThisTokenIsNotSoSecretChangeIt
+    web_dir: '%kernel.root_dir%/../web/'
 
     upload_image_type_list:
         - ["jpg", "image/jpg"]
@@ -19,12 +20,15 @@ parameters:
         - ["gif", "image/gif"]
         - ["png", "image/png"]
 
-    upload_image_size_list:
-            -
-                - 250
-                - 250
-
-    image_upload_dir: "%kernel.root_dir%/../web/photos/"
+    upload_photo_size:
+        - 250
+        - 250
+    upload_icon_size:
+        - 250
+        - 250
+    upload_salephoto_size:
+        - 200
+        - 130
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt

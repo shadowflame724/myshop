@@ -1,11 +1,4 @@
 services:
-    myshop.admin_event_exception:
-        class: AdminBundle\Event\HandleException
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception}
-
-    myshop.admin_namegenerator_img:
-        class: AdminBundle\ImageUtil\ImageNameGenerator
 
     myshop.admin_check_img:
         class: AdminBundle\ImageUtil\CheckImg
@@ -13,22 +6,22 @@ services:
     myshop.admin_resize_img:
         class: AdminBundle\ImageUtil\Resize
         public: false
-
-
     myshop.admin_image_upload:
         class: AdminBundle\ImageUtil\UploadImageService
         arguments:
             - "@myshop.admin_check_img"
-            - "@myshop.admin_namegenerator_img"
-            - "%upload_image_size_list%"
+            - "@myshop.admin_resize_img"
+            - "%upload_image_type_list%"
+            - "%upload_photo_size%"
+            - "%upload_icon_size%"
+            - "%upload_salephoto_size%"
         calls:
-            - ["setUploadImageRootDir", ["%image_upload_dir%"]]
+            - ["setWebDir", ["%web_dir%"]]
 
     myshop.admin_image_delete:
         class: AdminBundle\ImageUtil\ImageDelete
         calls:
-            - ["setUploadImageRootDir", ["%image_upload_dir%"]]
-
+            - ["setWebDir", ["%web_dir%"]]
     myshop.admin_unused_image_delete:
         class: AdminBundle\ImageUtil\DeleteUnusedImage
         arguments:
@@ -36,7 +29,7 @@ services:
             - "@myshop.admin_image_delete"
             - "@doctrine.orm.entity_manager"
         calls:
-            - ["setUploadImageRootDir", ["%image_upload_dir%"]]
+            - ["setWebDir", ["%web_dir%"]]
 
     myshop.admin_email_notification:
             class: AdminBundle\Notification\Notification

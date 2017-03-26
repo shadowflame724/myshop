@@ -2,10 +2,17 @@
 
 namespace AdminBundle\ImageUtil;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class ImageNameGenerator
 {
-    public function generateName()
+    public function generateName($uploadedFile)
     {
-        return rand(1000, 9999999);
+        if ($uploadedFile instanceof UploadedFile){
+            $extension = $uploadedFile->getClientOriginalExtension();
+        } else {
+            $extension = pathinfo($uploadedFile)['extension'];
+        }
+
     }
 }

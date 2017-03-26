@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class DeleteUnusedImage extends Controller
 {
 
-    private $uploadImageRootDir;
+    private $webDir;
     /**
      * @var EntityManager
      */
@@ -22,22 +22,20 @@ class DeleteUnusedImage extends Controller
         $this->manager = $manager;
     }
 
-
     /**
-     * @param mixed $uploadImageRootDir
+     * @param mixed $webDir
      */
-    public function setUploadImageRootDir($uploadImageRootDir)
+    public function setWebDir($webDir)
     {
-        $this->uploadImageRootDir = $uploadImageRootDir;
+        $this->webDir = $webDir;
     }
 
     public function deleteImg()
     {
-
         $manager = $this->manager;
-        $photoDirPath = $this->uploadImageRootDir;
-        $iconDirPath = $this->uploadImageRootDir . "../icons/";
-        $saleDirPath = $this->uploadImageRootDir . "../SalePhoto/";
+        $photoDirPath = $this->webDir . "photos/";
+        $iconDirPath = $this->webDir . "icons/";
+        $saleDirPath = $this->webDir . "SalePhoto/";
         $nameArr = [];
 
         $iconNameList = $this->manager
@@ -51,23 +49,20 @@ class DeleteUnusedImage extends Controller
             ->getResult();
 
         foreach ($photoNamesList as $item) {
-            $nameArr[] = $item["fileName"];
-            $nameArr[] = "small_" . $item["fileName"];
+            self::$count = $this->delete($photoDirPath, $item["fileName"]);
+            $smallName = "small_" . $item["fileName"];
+            self::$count = $this->delete($photoDirPath, $smallName);
         }
-
-        self::$count = $this->delete($photoDirPath, $nameArr);
 
         foreach ($iconNameList as $item) {
-            $nameArr[] = $item["iconFileName"];
+            self::$count = $this->delete($iconDirPath, $item["iconFileName"]);
         }
-        self::$count = $this->delete($iconDirPath, $nameArr);
 
         foreach ($saleNamesList as $item) {
-            $nameArr[] = $item["salePhoto"];
+            self::$count = $this->delete($saleDirPath, $item["salePhoto"]);
         }
 
         self::$count = $this->delete($saleDirPath, $nameArr);
-
 
         return self::$count;
     }
@@ -84,7 +79,10 @@ class DeleteUnusedImage extends Controller
             closedir($handle);
             foreach ($fileNames as $fileName) {
                 $fullFileName = $dir . $fileName;
-                if ($nameArr != null AND file_exists($fullFileName)) {
+                echo "<pre>";
+                var_dump($fullFileName);
+                echo "</pre>";
+                if ($nameArr == null AND file_exists($fullFileName)) {
                     unlink($fullFileName);
                     self::$count++;
                     return self::$count;

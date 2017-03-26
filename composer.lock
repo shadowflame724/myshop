@@ -1002,7 +1002,6 @@
                 "uri",
                 "url"
             ],
-
             "time": "2017-03-20 17:10:46"
         },
         {
@@ -1425,7 +1424,6 @@
                 "pseudorandom",
                 "random"
             ],
-
             "time": "2017-03-13 16:27:32"
         },
         {
@@ -1691,11 +1689,7 @@
                 "annotations",
                 "controllers"
             ],
-<<<<<<< HEAD
-            "time": "2017-03-21T23:34:44+00:00"
-=======
             "time": "2017-03-21 23:34:44"
->>>>>>> ae09b5e09b2f03b04961693d9c8829637a21e1ba
         },
         {
             "name": "sensiolabs/security-checker",

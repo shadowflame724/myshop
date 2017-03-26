@@ -15,32 +15,12 @@ use Intervention\Image\ImageManager;
 
 class Resize
 {
-    private $supportImageSize;
-    private $webDir;
-
-    /**
-     * @param string $webDir
-     */
-    public function setUploadImageRootDir($webDir)
-    {
-        $this->webDir = $webDir;
-    }
-
-    /**
-     * Resize constructor.
-     * @param $supportImageSize
-     */
-    public function __construct($supportImageSize)
-    {
-        $this->supportImageSize = $supportImageSize;
-    }
-
-    public function resize($dirPath, $imgName, $saleStamp = null)
+    public function resize($dirPath, $imgName, $size, $saleStamp = null)
     {
         $imgFile = $dirPath . $imgName;
         $img = new ImageResize($imgFile);
-        $height = $this->supportImageSize[0][0];
-        $width = $this->supportImageSize[0][1];
+        $height = $size[0];
+        $width = $size[1];
         $img->resizeToBestFit($height, $width);
         if (strpos($dirPath, "photos") !== false) {
             $smallPhotoName = "small_" . $imgName;

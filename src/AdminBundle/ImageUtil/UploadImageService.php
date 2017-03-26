@@ -2,7 +2,6 @@
 
 namespace AdminBundle\ImageUtil;
 
-
 use AdminBundle\Controller\ProductController;
 use DefaultBundle\Entity\Product;
 use Intervention\Image\ImageManager;
@@ -16,67 +15,63 @@ class UploadImageService
      * @var CheckImg
      */
     private $checkImg;
+    /**
+     * @var Resize
+     */
+    private $resize;
+    private $webDir;
+    private $supportImageTypeList;
+    private $photoSize;
+    private $iconSize;
+    private $salePhotoSize;
 
     /**
-     * @var ImageNameGenerator
+     * UploadImageService constructor.
+     * @param CheckImg $checkImg
+     * @param Resize $resize
+     * @param $supportImageTypeList
+     * @param $photoSize
+     * @param $iconSize
+     * @param $salePhotoSize
      */
-    private $imageNameGenerator;
-    private $uploadImageRootDir;
-    private $supportImageTypeList;
+    public function __construct(CheckImg $checkImg, Resize $resize, $supportImageTypeList, $photoSize, $iconSize, $salePhotoSize)
+    {
+        $this->checkImg = $checkImg;
+        $this->resize = $resize;
+        $this->supportImageTypeList = $supportImageTypeList;
+        $this->photoSize = $photoSize;
+        $this->iconSize = $iconSize;
+        $this->salePhotoSize = $salePhotoSize;
+    }
 
     /**
      * @param mixed $imageRootDir
      */
-    public function setUploadImageRootDir($imageRootDir)
+    public function setWebDir($webDir)
     {
-        $this->uploadImageRootDir = $imageRootDir;
-    }
-
-    public function __construct($checkImg, $imageNameGenerator, $imageTypeList)
-    {
-        $this->checkImg = $checkImg;
-        $this->imageNameGenerator = $imageNameGenerator;
-        $this->supportImageTypeList = $imageTypeList;
+        $this->webDir = $webDir;
     }
 
     /**
-     * @return UploadImageResult
+     * @return
      */
-    public function uploadImage(UploadedFile $uploadedFile = null, $id, $photoFileName = null)
+    public function uploadImage(UploadedFile $uploadedFile, $photoName = null)
     {
-        $imageNameGenerator = $this->imageNameGenerator;
         $checkImg = $this->checkImg;
+        $resize = $this->resize;
+        $webDir = $this->webDir;
+        $supportImageTypeList = $this->supportImageTypeList;
+        $photoSize = $this->photoSize;
+        $photoDirPath = $webDir . "photos/";
 
-        if ($photoFileName == null) {
-            $photoFileName = $id . $imageNameGenerator->generateName() . "." . $uploadedFile->getClientOriginalExtension();
+        if ($photoName == null) {
+            $photoName = $checkImg->check($uploadedFile, $supportImageTypeList);
         }
 
-        $photoDirPath = $this->uploadImageRootDir;
-        if ($uploadedFile != null) {
-            try {
-                $checkImg->check($uploadedFile);
-            } catch (\InvalidArgumentException $ex) {
-                die("Image type error!");
-            }
-            try {
-                $uploadedFile->move($photoDirPath, $photoFileName);
-            } catch (\Exception $exception) {
-                echo "Can not move file!";
-                throw $exception;
-            }
-        }
-
-        $img = new ImageResize($photoDirPath . $photoFileName);
-        $height = $this->supportImageTypeList[0][0];
-        $weight = $this->supportImageTypeList[0][1];
-        $img->resizeToBestFit($height, $weight);
-        $smallPhotoName = "small_" . $photoFileName;
-        $img->save($photoDirPath . $smallPhotoName);
-        $result = new UploadImageResult($photoFileName, $smallPhotoName);
-
+        $uploadedFile->move($photoDirPath, $photoName);
+        $result = $resize->resize($photoDirPath, $photoName, $photoSize);
         return $result;
     }
-
     /**
      * @return string
      */
@@ -109,6 +104,7 @@ class UploadImageService
 
         return $iconFileName;
     }
+
     /**
      * @return string
      */
@@ -121,7 +117,7 @@ class UploadImageService
         $saleStamp = $this->uploadImageRootDir . "../../source/SalePhoto/SalePhoto.png";
         $image = new ImageManager(array('driver' => 'gd'));
 
-        if ($uploadedFile == null){
+        if ($uploadedFile == null) {
             copy($iconDirPath . $saleName, $saleDirPath . $saleName);
         } else {
             try {

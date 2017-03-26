@@ -16,11 +16,11 @@ class ProductController extends Controller
     /**
      * @Template()
      */
-    public function listAction($pag = null)
+    public function listAction()
     {
         $productList = $this->getDoctrine()->getRepository("DefaultBundle:Product")->findAll();
-        $query = $this->getDoctrine()->getManager()->createQuery("select p,c,m from Default:");
-        $pag = $this->get("knp_paginator");
+        //$query = $this->getDoctrine()->getManager()->createQuery("select p,c,m from Default:");
+        //$pag = $this->get("knp_paginator");
 
         return ["productList" => $productList];
     }
