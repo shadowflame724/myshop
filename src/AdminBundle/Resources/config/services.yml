@@ -5,6 +5,10 @@ services:
     myshop.admin_check_img:
         class: AdminBundle\ImageUtil\CheckImg
         public: false
+    myshop.admin_resize_img:
+        class: AdminBundle\ImageUtil\Resize
+        public: false
+
 
     myshop.admin_image_upload:
         class: AdminBundle\ImageUtil\UploadImageService

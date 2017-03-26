@@ -35,15 +35,24 @@ class Resize
         $this->supportImageSize = $supportImageSize;
     }
 
-    public function resize($photoFile)
+    public function resize($dirPath, $imgName, $saleStamp = null)
     {
-        $photoDirPath = $webDir . "photos/";
-        $img = new ImageResize($photoFile);
+        $imgFile = $dirPath . $imgName;
+        $img = new ImageResize($imgFile);
         $height = $this->supportImageSize[0][0];
-        $weight = $this->supportImageSize[0][1];
-        $img->resizeToBestFit($height, $weight);
-        $smallPhotoName = "small_" . $photoFileName;
-        $img->save($photoDirPath . $smallPhotoName);
-        $result = new UploadImageResult($photoFileName, $smallPhotoName);
+        $width = $this->supportImageSize[0][1];
+        $img->resizeToBestFit($height, $width);
+        if (strpos($dirPath, "photos") !== false) {
+            $smallPhotoName = "small_" . $imgName;
+            $img->save($dirPath . $smallPhotoName);
+            $result = new UploadImageResult($imgName, $smallPhotoName);
+            return $result;
+        } else {
+            if ($saleStamp != null) {
+                $image = new ImageManager(array('driver' => 'gd'));
+                $image->make($imgFile)->resize($width, $height)->insert($saleStamp)->save();
+            } else $img->save($imgFile);
+            return $imgName;
+        }
     }
 }
