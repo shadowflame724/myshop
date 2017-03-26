@@ -4,8 +4,7 @@ services:
 
     myshop.admin_check_img:
         class: AdminBundle\ImageUtil\CheckImg
-        arguments:
-            - "%upload_image_type_list%"
+        public: false
 
     myshop.admin_image_upload:
         class: AdminBundle\ImageUtil\UploadImageService
