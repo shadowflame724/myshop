@@ -1,4 +1,9 @@
 services:
+    myshop.admin_event_exception:
+        class: AdminBundle\Event\HandleException
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception}
+
     myshop.admin_namegenerator_img:
         class: AdminBundle\ImageUtil\ImageNameGenerator
 

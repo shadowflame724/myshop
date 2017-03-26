@@ -46,3 +46,16 @@ class ProductController extends Controller
         return $response;
     }
 }
+/*
+ * json_decode на собесед.
+ * sort array function
+ * АЛГОРИТМЫ
+ * работа с массивами!!!!!!!!!!!!!!!!!!
+ * работа с деревьями!!!!!!!!!!
+ * работа с графами ????
+ *
+ * DEPENDENCY INJECTION, IOC  для симфони позиции
+ *
+ *
+ *
+ */

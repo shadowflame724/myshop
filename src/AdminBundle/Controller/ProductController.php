@@ -16,9 +16,12 @@ class ProductController extends Controller
     /**
      * @Template()
      */
-    public function listAction()
+    public function listAction($pag = null)
     {
         $productList = $this->getDoctrine()->getRepository("DefaultBundle:Product")->findAll();
+        $query = $this->getDoctrine()->getManager()->createQuery("select p,c,m from Default:");
+        $pag = $this->get("knp_paginator");
+
         return ["productList" => $productList];
     }
 
@@ -37,7 +40,7 @@ class ProductController extends Controller
                 /** @var ConstraintViolation $error */
                 foreach ($errorList as $error) {
                     $this->addFlash('error', $error->getMessage());
-                }
+                }   
 
                 return $this->redirectToRoute("myshop.admin_editor_product_add");
             }
