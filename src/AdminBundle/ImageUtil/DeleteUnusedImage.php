@@ -49,19 +49,23 @@ class DeleteUnusedImage extends Controller
             ->getResult();
 
         foreach ($photoNamesList as $item) {
-            self::$count = $this->delete($photoDirPath, $item["fileName"]);
-            $smallName = "small_" . $item["fileName"];
-            self::$count = $this->delete($photoDirPath, $smallName);
+            $nameArr[] = $item["fileName"];
+            $nameArr[] = "small_" . $item["fileName"];
         }
 
+        self::$count = $this->delete($photoDirPath, $nameArr);
+
+        $nameArr = null;
         foreach ($iconNameList as $item) {
-            self::$count = $this->delete($iconDirPath, $item["iconFileName"]);
+            $nameArr[] = $item["iconFileName"];
         }
 
+        self::$count = $this->delete($iconDirPath, $nameArr);
+
+        $nameArr = null;
         foreach ($saleNamesList as $item) {
-            self::$count = $this->delete($saleDirPath, $item["salePhoto"]);
+            $nameArr[] =  $item["salePhoto"];
         }
-
         self::$count = $this->delete($saleDirPath, $nameArr);
 
         return self::$count;
@@ -79,13 +83,9 @@ class DeleteUnusedImage extends Controller
             closedir($handle);
             foreach ($fileNames as $fileName) {
                 $fullFileName = $dir . $fileName;
-                echo "<pre>";
-                var_dump($fullFileName);
-                echo "</pre>";
-                if ($nameArr == null AND file_exists($fullFileName)) {
+                if (count($nameArr) == 0 AND file_exists($fullFileName)) {
                     unlink($fullFileName);
                     self::$count++;
-                    return self::$count;
                 } elseif (in_array($fileName, $nameArr) == false AND file_exists($fullFileName)) {
                     unlink($fullFileName);
                     self::$count++;
@@ -93,5 +93,6 @@ class DeleteUnusedImage extends Controller
             }
         }
         return self::$count;
+
     }
 }
