@@ -23,7 +23,7 @@ class UploadImageService
     private $supportImageTypeList;
     private $photoSize;
     private $iconSize;
-    private $salePhotoSize;
+    private $saleSize;
 
     /**
      * UploadImageService constructor.
@@ -32,16 +32,16 @@ class UploadImageService
      * @param $supportImageTypeList
      * @param $photoSize
      * @param $iconSize
-     * @param $salePhotoSize
+     * @param $saleSize
      */
-    public function __construct(CheckImg $checkImg, Resize $resize, $supportImageTypeList, $photoSize, $iconSize, $salePhotoSize)
+    public function __construct(CheckImg $checkImg, Resize $resize, $supportImageTypeList, $photoSize, $iconSize, $saleSize)
     {
         $this->checkImg = $checkImg;
         $this->resize = $resize;
         $this->supportImageTypeList = $supportImageTypeList;
         $this->photoSize = $photoSize;
         $this->iconSize = $iconSize;
-        $this->salePhotoSize = $salePhotoSize;
+        $this->saleSize = $saleSize;
     }
 
     /**
@@ -72,69 +72,55 @@ class UploadImageService
         $result = $resize->resize($photoDirPath, $photoName, $photoSize);
         return $result;
     }
+
     /**
      * @return string
      */
-    public function uploadIcon(UploadedFile $uploadedFile, $model, $iconFileName = null)
+    public function uploadIcon(UploadedFile $uploadedFile, $iconFileName = null)
     {
-        $imageNameGenerator = $this->imageNameGenerator;
         $checkImg = $this->checkImg;
+        $resize = $this->resize;
+        $webDir = $this->webDir;
+        $supportImageTypeList = $this->supportImageTypeList;
+        $iconSize = $this->iconSize;
+        $iconDirPath = $webDir . "icons/";
 
         if ($iconFileName == null) {
-            $iconFileName = $model . $imageNameGenerator->generateName() . "." . $uploadedFile->getClientOriginalExtension();
+            $iconFileName = $checkImg->check($uploadedFile, $supportImageTypeList);
         }
 
-        $iconDirPath = $this->uploadImageRootDir . "../icons/";
-
-        try {
-            $checkImg->check($uploadedFile);
-        } catch (\InvalidArgumentException $ex) {
-            die("Image type error!");
-        }
-
-        try {
-            $uploadedFile->move($iconDirPath, $iconFileName);
-        } catch (\Exception $exception) {
-            echo "Can not move file!";
-            throw $exception;
-        }
-        $img = new ImageResize($iconDirPath . $iconFileName);
-        $img->resizeToBestFit(250, 250);
-        $img->save($iconDirPath . $iconFileName);
-
-        return $iconFileName;
+        $uploadedFile->move($iconDirPath, $iconFileName);
+        $result = $resize->resize($iconDirPath, $iconFileName, $iconSize);
+        return $result;
     }
 
     /**
      * @return string
      */
-    public function uploadSale(UploadedFile $uploadedFile = null, Product $product)
+    public function uploadSale(UploadedFile $uploadedFile = null, $saleFileName = null, $flag = null)
     {
         $checkImg = $this->checkImg;
-        $iconDirPath = $this->uploadImageRootDir . "../icons/";
-        $saleDirPath = $this->uploadImageRootDir . "../SalePhoto/";
-        $saleName = $product->getIconFileName();
-        $saleStamp = $this->uploadImageRootDir . "../../source/SalePhoto/SalePhoto.png";
-        $image = new ImageManager(array('driver' => 'gd'));
+        $resize = $this->resize;
+        $webDir = $this->webDir;
+        $supportImageTypeList = $this->supportImageTypeList;
+        $saleSize = $this->saleSize;
+        $saleDirPath = $webDir . "SalePhoto/";
+        $iconDirPath = $webDir . "icons/";
+        $saleStamp = $webDir . "../source/SalePhoto/SaleStamp.png";
+
 
         if ($uploadedFile == null) {
-            copy($iconDirPath . $saleName, $saleDirPath . $saleName);
-        } else {
-            try {
-                $checkImg->check($uploadedFile);
-            } catch (\InvalidArgumentException $ex) {
-                die("Image type error!");
-            }
-            try {
-                $uploadedFile->move($saleDirPath, $saleName);
-            } catch (\Exception $exception) {
-                echo "Can not move file!";
-                throw $exception;
-            }
-        }
-        $salePhotoFile = $saleDirPath . $saleName;
-        $image->make($salePhotoFile)->resize(200, 130)->insert($saleStamp)->save();
+            copy($iconDirPath . $saleFileName, $saleDirPath . $saleFileName);
 
-        return true;
+        } else {
+            $uploadedFile->move($iconDirPath, $saleFileName);
+            $saleFileName = $checkImg->check($uploadedFile, $supportImageTypeList);
+        }
+        if ($flag != null) {
+            $result = $resize->resize($saleDirPath, $saleFileName, $saleSize, $saleStamp);
+        } else {
+            $result = $resize->resize($saleDirPath, $saleFileName, $saleSize);
+        }
+        return $result;
     }
 }

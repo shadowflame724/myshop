@@ -66,13 +66,14 @@ class SaleProductController extends Controller
             $saleProduct->setProduct($product);
             $filesAr = $request->files->get("defaultbundle_saleproduct");
 
-
             if ($filesAr["photoFile"] !== null) {
                 /** @var UploadedFile $photoFile */
                 $photoFile = $filesAr["photoFile"];
             }
-            $saleProduct->setSalePhoto($product->getIconFileName());
-            $result = $this->get("myshop.admin_image_upload")->uploadSale($photoFile, $product);
+            $saleFileName = $product->getIconFileName();
+            $saleProduct->setSalePhoto($saleFileName);
+
+            $result = $this->get("myshop.admin_image_upload")->uploadSale($photoFile, $saleFileName, $flag =null);
             if ($result == true) {
                 $manager->persist($saleProduct);
                 $manager->flush();
