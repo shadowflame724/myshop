@@ -27,15 +27,15 @@ class Resize
             $img->save($dirPath . $smallPhotoName);
             $result = new UploadImageResult($imgName, $smallPhotoName);
             return $result;
-        } elseif(strpos($dirPath, "icons") !== false){
+        } elseif (strpos($dirPath, "icons") !== false) {
             $img->save($dirPath . $imgName);
             return $imgName;
         } elseif (strpos($dirPath, "Sale") !== false) {
             if ($saleStamp != null) {
                 $image = new ImageManager(array('driver' => 'gd'));
-                $image->make($imgFile)->resize($width, $height)->insert($saleStamp)->save();
+                $image->make($imgFile)->insert($saleStamp)->save();
             }
-            
+
             return $imgName;
         }
     }

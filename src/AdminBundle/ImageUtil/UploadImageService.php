@@ -108,13 +108,12 @@ class UploadImageService
         $iconDirPath = $webDir . "icons/";
         $saleStamp = $webDir . "../source/SalePhoto/SaleStamp.png";
 
-
         if ($uploadedFile == null) {
             copy($iconDirPath . $saleFileName, $saleDirPath . $saleFileName);
 
         } else {
-            $uploadedFile->move($iconDirPath, $saleFileName);
             $saleFileName = $checkImg->check($uploadedFile, $supportImageTypeList);
+            $uploadedFile->move($saleDirPath, $saleFileName);
         }
         if ($flag != null) {
             $result = $resize->resize($saleDirPath, $saleFileName, $saleSize, $saleStamp);
