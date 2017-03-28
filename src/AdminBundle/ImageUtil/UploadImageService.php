@@ -47,7 +47,7 @@ class UploadImageService
     }
 
     /**
-     * @param mixed $imageRootDir
+     * @param mixed $webDir
      */
     public function setWebDir($webDir)
     {
@@ -63,7 +63,7 @@ class UploadImageService
     }
 
     /**
-     * @return
+     * @return UploadImageResult
      */
     public function uploadImage(UploadedFile $uploadedFile, $photoName = null)
     {
