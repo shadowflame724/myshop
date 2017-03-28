@@ -19,7 +19,9 @@ class UploadImageService
      * @var Resize
      */
     private $resize;
+
     private $webDir;
+    private $saleStamp;
     private $supportImageTypeList;
     private $photoSize;
     private $iconSize;
@@ -50,6 +52,14 @@ class UploadImageService
     public function setWebDir($webDir)
     {
         $this->webDir = $webDir;
+    }
+
+    /**
+     * @param mixed $saleStamp
+     */
+    public function setSaleStamp($saleStamp)
+    {
+        $this->saleStamp = $saleStamp;
     }
 
     /**
@@ -106,7 +116,7 @@ class UploadImageService
         $saleSize = $this->saleSize;
         $saleDirPath = $webDir . "SalePhoto/";
         $iconDirPath = $webDir . "icons/";
-        $saleStamp = $webDir . "../source/SalePhoto/SaleStamp.png";
+        $saleStamp = $this->saleStamp;
 
         if ($uploadedFile == null) {
             copy($iconDirPath . $saleFileName, $saleDirPath . $saleFileName);

@@ -17,6 +17,7 @@ services:
             - "%upload_salephoto_size%"
         calls:
             - ["setWebDir", ["%web_dir%"]]
+            - ["setSaleStampDir", ["%sale_stamp"]]
 
     myshop.admin_image_delete:
         class: AdminBundle\ImageUtil\ImageDelete
