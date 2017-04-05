@@ -3,6 +3,7 @@ namespace AdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use DefaultBundle\Entity\Product;
@@ -129,7 +130,7 @@ class ProductController extends Controller
     /**
      * @Template()
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction($id)
     {
         $manager = $this->getDoctrine()->getManager();
         $product = $this->getDoctrine()->getRepository("DefaultBundle:Product")->find($id);
@@ -151,6 +152,14 @@ class ProductController extends Controller
         $body = "Product " . $product->getModel() . " deleted";
         $notification->sendAdminsEmail($body);
         return $this->redirectToRoute("myshop.admin_editor_product_list");
+    }
+
+    public function deleteAjaxAction($id)
+    {
+        $this->deleteAction($id);
+
+        $responseJson = new JsonResponse(["message" => "Product deleted"]);
+        return $responseJson;
     }
 }
 
