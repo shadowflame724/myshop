@@ -58,7 +58,7 @@ class ProductPhotoController extends Controller
             /** @var UploadedFile $photoFile */
             $photoFile = $filesAr["photoFile"];
 
-            $result = $this->get("myshop.admin_image_upload")->uploadImage($photoFile, $id);
+            $result = $this->get("myshop.admin_image_upload")->uploadImage($photoFile);
 
             $photo->setFileName($result->getPhotoFileName());
             $photo->setSmallFileName($result->getSmallPhotoName());
@@ -120,7 +120,7 @@ class ProductPhotoController extends Controller
                         /** @var UploadedFile $photoFile */
                         $photoFile = $filesAr["photoFile"];
 
-                        $result = $this->get("myshop.admin_image_upload")->uploadImage($photoFile, $id, $photoFileName);
+                        $result = $this->get("myshop.admin_image_upload")->uploadImage($photoFile, $photoFileName);
 
                         $photo->setFileName($result->getPhotoFileName());
                         $photo->setSmallFileName($result->getSmallPhotoName());

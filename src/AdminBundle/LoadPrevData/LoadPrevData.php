@@ -185,7 +185,7 @@ class LoadPrevData
             $saleProduct->setProduct($productList[$product]);
 
             $iconFileName = $kernel->getRootDir() . "/../web/icons/" . $productList[$product]->getIconFileName();
-            $saleStamp = $kernel->getRootDir() . "/../source/SalePhoto/SalePhoto.png";
+            $saleStamp = $kernel->getRootDir() . "/../source/SalePhoto/SaleStamp.png";
 
             $image = new ImageManager(array('driver' => 'gd'));
 

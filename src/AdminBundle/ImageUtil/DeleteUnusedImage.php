@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class DeleteUnusedImage extends Controller
 {
 
-    private $uploadImageRootDir;
+    private $webDir;
     /**
      * @var EntityManager
      */
@@ -22,22 +22,20 @@ class DeleteUnusedImage extends Controller
         $this->manager = $manager;
     }
 
-
     /**
-     * @param mixed $uploadImageRootDir
+     * @param mixed $webDir
      */
-    public function setUploadImageRootDir($uploadImageRootDir)
+    public function setWebDir($webDir)
     {
-        $this->uploadImageRootDir = $uploadImageRootDir;
+        $this->webDir = $webDir;
     }
 
     public function deleteImg()
     {
-
         $manager = $this->manager;
-        $photoDirPath = $this->uploadImageRootDir;
-        $iconDirPath = $this->uploadImageRootDir . "../icons/";
-        $saleDirPath = $this->uploadImageRootDir . "../SalePhoto/";
+        $photoDirPath = $this->webDir . "photos/";
+        $iconDirPath = $this->webDir . "icons/";
+        $saleDirPath = $this->webDir . "SalePhoto/";
         $nameArr = [];
 
         $iconNameList = $this->manager
@@ -57,17 +55,18 @@ class DeleteUnusedImage extends Controller
 
         self::$count = $this->delete($photoDirPath, $nameArr);
 
+        $nameArr = null;
         foreach ($iconNameList as $item) {
             $nameArr[] = $item["iconFileName"];
         }
+
         self::$count = $this->delete($iconDirPath, $nameArr);
 
+        $nameArr = null;
         foreach ($saleNamesList as $item) {
-            $nameArr[] = $item["salePhoto"];
+            $nameArr[] =  $item["salePhoto"];
         }
-
         self::$count = $this->delete($saleDirPath, $nameArr);
-
 
         return self::$count;
     }
@@ -84,10 +83,9 @@ class DeleteUnusedImage extends Controller
             closedir($handle);
             foreach ($fileNames as $fileName) {
                 $fullFileName = $dir . $fileName;
-                if ($nameArr != null AND file_exists($fullFileName)) {
+                if (count($nameArr) == 0 AND file_exists($fullFileName)) {
                     unlink($fullFileName);
                     self::$count++;
-                    return self::$count;
                 } elseif (in_array($fileName, $nameArr) == false AND file_exists($fullFileName)) {
                     unlink($fullFileName);
                     self::$count++;
@@ -95,5 +93,6 @@ class DeleteUnusedImage extends Controller
             }
         }
         return self::$count;
+
     }
 }

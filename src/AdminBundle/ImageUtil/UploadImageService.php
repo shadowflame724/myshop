@@ -2,7 +2,6 @@
 
 namespace AdminBundle\ImageUtil;
 
-
 use AdminBundle\Controller\ProductController;
 use DefaultBundle\Entity\Product;
 use Intervention\Image\ImageManager;
@@ -16,129 +15,121 @@ class UploadImageService
      * @var CheckImg
      */
     private $checkImg;
-
     /**
-     * @var ImageNameGenerator
+     * @var Resize
      */
-    private $imageNameGenerator;
-    private $uploadImageRootDir;
+    private $resize;
+
+    private $webDir;
+    private $saleStamp;
     private $supportImageTypeList;
+    private $photoSize;
+    private $iconSize;
+    private $saleSize;
 
     /**
-     * @param mixed $imageRootDir
+     * UploadImageService constructor.
+     * @param CheckImg $checkImg
+     * @param Resize $resize
+     * @param $supportImageTypeList
+     * @param $photoSize
+     * @param $iconSize
+     * @param $saleSize
      */
-    public function setUploadImageRootDir($imageRootDir)
-    {
-        $this->uploadImageRootDir = $imageRootDir;
-    }
-
-    public function __construct($checkImg, $imageNameGenerator, $imageTypeList)
+    public function __construct(CheckImg $checkImg, Resize $resize, $supportImageTypeList, $photoSize, $iconSize, $saleSize)
     {
         $this->checkImg = $checkImg;
-        $this->imageNameGenerator = $imageNameGenerator;
-        $this->supportImageTypeList = $imageTypeList;
+        $this->resize = $resize;
+        $this->supportImageTypeList = $supportImageTypeList;
+        $this->photoSize = $photoSize;
+        $this->iconSize = $iconSize;
+        $this->saleSize = $saleSize;
+    }
+
+    /**
+     * @param mixed $webDir
+     */
+    public function setWebDir($webDir)
+    {
+        $this->webDir = $webDir;
+    }
+
+    /**
+     * @param mixed $saleStamp
+     */
+    public function setSaleStamp($saleStamp)
+    {
+        $this->saleStamp = $saleStamp;
     }
 
     /**
      * @return UploadImageResult
      */
-    public function uploadImage(UploadedFile $uploadedFile = null, $id, $photoFileName = null)
+    public function uploadImage(UploadedFile $uploadedFile, $photoName = null)
     {
-        $imageNameGenerator = $this->imageNameGenerator;
         $checkImg = $this->checkImg;
+        $resize = $this->resize;
+        $webDir = $this->webDir;
+        $supportImageTypeList = $this->supportImageTypeList;
+        $photoSize = $this->photoSize;
+        $photoDirPath = $webDir . "photos/";
 
-        if ($photoFileName == null) {
-            $photoFileName = $id . $imageNameGenerator->generateName() . "." . $uploadedFile->getClientOriginalExtension();
+        if ($photoName == null) {
+            $photoName = $checkImg->check($uploadedFile, $supportImageTypeList);
         }
 
-        $photoDirPath = $this->uploadImageRootDir;
-        if ($uploadedFile != null) {
-            try {
-                $checkImg->check($uploadedFile);
-            } catch (\InvalidArgumentException $ex) {
-                die("Image type error!");
-            }
-            try {
-                $uploadedFile->move($photoDirPath, $photoFileName);
-            } catch (\Exception $exception) {
-                echo "Can not move file!";
-                throw $exception;
-            }
-        }
-
-        $img = new ImageResize($photoDirPath . $photoFileName);
-        $height = $this->supportImageTypeList[0][0];
-        $weight = $this->supportImageTypeList[0][1];
-        $img->resizeToBestFit($height, $weight);
-        $smallPhotoName = "small_" . $photoFileName;
-        $img->save($photoDirPath . $smallPhotoName);
-        $result = new UploadImageResult($photoFileName, $smallPhotoName);
-
+        $uploadedFile->move($photoDirPath, $photoName);
+        $result = $resize->resize($photoDirPath, $photoName, $photoSize);
         return $result;
     }
 
     /**
      * @return string
      */
-    public function uploadIcon(UploadedFile $uploadedFile, $model, $iconFileName = null)
+    public function uploadIcon(UploadedFile $uploadedFile, $iconFileName = null)
     {
-        $imageNameGenerator = $this->imageNameGenerator;
         $checkImg = $this->checkImg;
+        $resize = $this->resize;
+        $webDir = $this->webDir;
+        $supportImageTypeList = $this->supportImageTypeList;
+        $iconSize = $this->iconSize;
+        $iconDirPath = $webDir . "icons/";
 
         if ($iconFileName == null) {
-            $iconFileName = $model . $imageNameGenerator->generateName() . "." . $uploadedFile->getClientOriginalExtension();
+            $iconFileName = $checkImg->check($uploadedFile, $supportImageTypeList);
         }
 
-        $iconDirPath = $this->uploadImageRootDir . "../icons/";
-
-        try {
-            $checkImg->check($uploadedFile);
-        } catch (\InvalidArgumentException $ex) {
-            die("Image type error!");
-        }
-
-        try {
-            $uploadedFile->move($iconDirPath, $iconFileName);
-        } catch (\Exception $exception) {
-            echo "Can not move file!";
-            throw $exception;
-        }
-        $img = new ImageResize($iconDirPath . $iconFileName);
-        $img->resizeToBestFit(250, 250);
-        $img->save($iconDirPath . $iconFileName);
-
-        return $iconFileName;
+        $uploadedFile->move($iconDirPath, $iconFileName);
+        $result = $resize->resize($iconDirPath, $iconFileName, $iconSize);
+        return $result;
     }
+
     /**
      * @return string
      */
-    public function uploadSale(UploadedFile $uploadedFile = null, Product $product)
+    public function uploadSale(UploadedFile $uploadedFile = null, $saleFileName = null, $flag = null)
     {
         $checkImg = $this->checkImg;
-        $iconDirPath = $this->uploadImageRootDir . "../icons/";
-        $saleDirPath = $this->uploadImageRootDir . "../SalePhoto/";
-        $saleName = $product->getIconFileName();
-        $saleStamp = $this->uploadImageRootDir . "../../source/SalePhoto/SalePhoto.png";
-        $image = new ImageManager(array('driver' => 'gd'));
+        $resize = $this->resize;
+        $webDir = $this->webDir;
+        $supportImageTypeList = $this->supportImageTypeList;
+        $saleSize = $this->saleSize;
+        $saleDirPath = $webDir . "SalePhoto/";
+        $iconDirPath = $webDir . "icons/";
+        $saleStamp = $this->saleStamp;
 
-        if ($uploadedFile == null){
-            copy($iconDirPath . $saleName, $saleDirPath . $saleName);
+        if ($uploadedFile == null) {
+            copy($iconDirPath . $saleFileName, $saleDirPath . $saleFileName);
+
         } else {
-            try {
-                $checkImg->check($uploadedFile);
-            } catch (\InvalidArgumentException $ex) {
-                die("Image type error!");
-            }
-            try {
-                $uploadedFile->move($saleDirPath, $saleName);
-            } catch (\Exception $exception) {
-                echo "Can not move file!";
-                throw $exception;
-            }
+            $saleFileName = $checkImg->check($uploadedFile, $supportImageTypeList);
+            $uploadedFile->move($saleDirPath, $saleFileName);
         }
-        $salePhotoFile = $saleDirPath . $saleName;
-        $image->make($salePhotoFile)->resize(200, 130)->insert($saleStamp)->save();
-
-        return true;
+        if ($flag != null) {
+            $result = $resize->resize($saleDirPath, $saleFileName, $saleSize, $saleStamp);
+        } else {
+            $result = $resize->resize($saleDirPath, $saleFileName, $saleSize);
+        }
+        return $result;
     }
 }

@@ -5,20 +5,21 @@ namespace AdminBundle\ImageUtil;
 
 class ImageDelete
 {
-    private $uploadImageRootDir;
+    private $webDir;
 
     /**
-     * @param mixed $uploadImageRootDir
+     * @param mixed $webDir
      */
-    public function setUploadImageRootDir($uploadImageRootDir)
+    public function setWebDir($webDir)
     {
-        $this->uploadImageRootDir = $uploadImageRootDir;
+        $this->webDir = $webDir;
     }
+
 
     public function imageDelete($photoFileName, $iconFileName = null)
     {
-        $photoDirPath = $this->uploadImageRootDir;
-        $iconDirPath = $this->uploadImageRootDir . "../icons/";
+        $photoDirPath = $this->webDir;
+        $iconDirPath = $this->webDir . "icons/";
         $iconFile = $iconDirPath . $iconFileName;
         $smallPhotoName = "small_" . $photoFileName;
         $photoFile = $photoDirPath . $photoFileName;

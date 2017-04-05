@@ -15,35 +15,28 @@ use Intervention\Image\ImageManager;
 
 class Resize
 {
-    private $supportImageSize;
-    private $webDir;
-
-    /**
-     * @param string $webDir
-     */
-    public function setUploadImageRootDir($webDir)
+    public function resize($dirPath, $imgName, $size, $saleStamp = null)
     {
-        $this->webDir = $webDir;
-    }
+        $imgFile = $dirPath . $imgName;
+        $img = new ImageResize($imgFile);
+        $height = $size[0];
+        $width = $size[1];
+        $img->resizeToBestFit($height, $width);
+        if (strpos($dirPath, "photos") !== false) {
+            $smallPhotoName = "small_" . $imgName;
+            $img->save($dirPath . $smallPhotoName);
+            $result = new UploadImageResult($imgName, $smallPhotoName);
+            return $result;
+        } elseif (strpos($dirPath, "icons") !== false) {
+            $img->save($dirPath . $imgName);
+            return $imgName;
+        } elseif (strpos($dirPath, "Sale") !== false) {
+            if ($saleStamp != null) {
+                $image = new ImageManager(array('driver' => 'gd'));
+                $image->make($imgFile)->insert($saleStamp)->save();
+            }
 
-    /**
-     * Resize constructor.
-     * @param $supportImageSize
-     */
-    public function __construct($supportImageSize)
-    {
-        $this->supportImageSize = $supportImageSize;
-    }
-
-    public function resize($photoFile)
-    {
-        $photoDirPath = $webDir . "photos/";
-        $img = new ImageResize($photoFile);
-        $height = $this->supportImageSize[0][0];
-        $weight = $this->supportImageSize[0][1];
-        $img->resizeToBestFit($height, $weight);
-        $smallPhotoName = "small_" . $photoFileName;
-        $img->save($photoDirPath . $smallPhotoName);
-        $result = new UploadImageResult($photoFileName, $smallPhotoName);
+            return $imgName;
+        }
     }
 }

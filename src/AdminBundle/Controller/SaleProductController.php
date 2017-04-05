@@ -32,6 +32,7 @@ class SaleProductController extends Controller
     public function addAction(Request $request, $id)
     {
         $photoFile = null;
+        $saleFileName = null;
         $manager = $this->getDoctrine()->getManager();
         $product = $manager->getRepository("DefaultBundle:Product")->find($id);
         $test = $manager->createQuery("select s from DefaultBundle:SaleProduct s where s.product = '$id'")
@@ -66,42 +67,38 @@ class SaleProductController extends Controller
             $saleProduct->setProduct($product);
             $filesAr = $request->files->get("defaultbundle_saleproduct");
 
-
             if ($filesAr["photoFile"] !== null) {
                 /** @var UploadedFile $photoFile */
                 $photoFile = $filesAr["photoFile"];
+            } else {
+                $saleFileName = $product->getIconFileName();
             }
-            $saleProduct->setSalePhoto($product->getIconFileName());
-            $result = $this->get("myshop.admin_image_upload")->uploadSale($photoFile, $product);
-            if ($result == true) {
-                $manager->persist($saleProduct);
-                $manager->flush();
-                $this->addFlash(
-                    'success',
-                    'SaleProduct added!'
-                );
-                $notification = $this->get("myshop.admin_email_notification");
-                $body = "Sale to product " . $product->getModel() . " added";
-                $notification->sendAdminsEmail($body);
-            }else {
-                $this->addFlash(
-                    'error',
-                    'SaleProduct not added!'
-                );
-            }
+            $flag = $request->get("flag");
+            $result = $this->get("myshop.admin_image_upload")->uploadSale($photoFile, $saleFileName, $flag);
+            $saleProduct->setSalePhoto($result);
 
+            $manager->persist($saleProduct);
+            $manager->flush();
+            $this->addFlash(
+                'success',
+                'SaleProduct added!');
+
+            $notification = $this->get("myshop.admin_email_notification");
+            $body = "Sale to product " . $product->getModel() . " added";
+            $notification->sendAdminsEmail($body);
             return $this->redirectToRoute("myshop.admin_editor_saleproduct_list");
         }
-        return [
-            "form" => $form->createView(),
-            "product" => $product
-        ];
+
+
+        return ["form" => $form->createView(),
+            "product" => $product];
     }
 
     /**
      * @Template()
      */
-    public function editAction(Request $request, $id)
+    public
+    function editAction(Request $request, $id)
     {
         $manager = $this->getDoctrine()->getManager();
         //$product = $manager->getRepository("DefaultBundle:Product")->find($id);
@@ -141,7 +138,8 @@ class SaleProductController extends Controller
     /**
      * @Template()
      */
-    public function deleteAction(Request $request, $id)
+    public
+    function deleteAction(Request $request, $id)
     {
         $saleProduct = $this->getDoctrine()->getRepository("DefaultBundle:SaleProduct")->find($id);
         $manager = $this->getDoctrine()->getManager();
