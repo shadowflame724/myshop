@@ -40,7 +40,7 @@ class ProductController extends Controller
                 /** @var ConstraintViolation $error */
                 foreach ($errorList as $error) {
                     $this->addFlash('error', $error->getMessage());
-                }   
+                }
 
                 return $this->redirectToRoute("myshop.admin_editor_product_add");
             }
