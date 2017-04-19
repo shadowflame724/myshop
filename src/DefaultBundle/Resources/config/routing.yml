@@ -19,3 +19,7 @@ product_info_rest_json:
 myshop.page:
     path:   /{pageKey}
     defaults: { _controller: DefaultBundle:Page:index }
+
+myshop.order_history:
+    path:   /orders/history
+    defaults: { _controller: DefaultBundle:Basket:historyOrder }
