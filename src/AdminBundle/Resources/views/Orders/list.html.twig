@@ -1,0 +1,40 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block body %}
+    <table border="1">
+        <tr>
+            <td>
+                Date add
+            </td>
+            <td>
+                Client
+            </td>
+            <td>
+                Sum
+            </td>
+            <td>
+                Status
+            </td>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>
+                {{ order.date }}
+            </td>
+            <td>
+               {{ order.email }}
+            </td>
+            <td>
+                {{ order.sum }}
+            </td>
+            <td>
+                {{ order.status }}
+            </td>
+            <td>
+                <a href="#">Обработать</a>
+                <a href="#">Отклонить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

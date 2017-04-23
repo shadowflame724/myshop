@@ -21,6 +21,7 @@
             <a href="{{ path("myshop.admin_editor_page_list") }}"> Page</a><br>
             <a href="{{ path("myshop.admin_export") }}"> Export BD</a><br>
             <a href="{{ path("myshop.admin_import") }}"> Import BD</a><br>
+            <a href="{{ path("myshop.admin_editor_orders_list") }}"> Orders list</a><br>
         </td>
         <td valign="top">
             {% for flash_message in app.session.flashBag.get('success') %}

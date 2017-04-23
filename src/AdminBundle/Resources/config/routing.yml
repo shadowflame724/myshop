@@ -147,3 +147,6 @@ myshop.admin_editor_page_delete:
     requirements:
           id: \d+
 
+myshop.admin_editor_orders_list:
+    path: /orders/list
+    defaults: { _controller: AdminBundle:Orders:list}
